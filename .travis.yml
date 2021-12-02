@@ -1,0 +1,16 @@
+language: csharp
+dist: trusty
+os: linux
+mono: none
+dotnet: 2.0
+script:
+  - ./build.sh
+
+branches:
+  only:
+    - master
+
+git:
+  depth: 1
+
+sudo: false

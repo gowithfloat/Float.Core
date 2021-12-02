@@ -1,0 +1,95 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <CodeAnalysisRuleSet>$(SolutionDir)\stylecop.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\Float.Core.xml</DocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(SolutionDir)\stylecop.json" />
+  </ItemGroup>
+  <PropertyGroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PackageId>Float.Core</PackageId>
+    <Title>Float.Core</Title>
+    <PackageDescription>Common Float code.</PackageDescription>
+    <PackageTags>Float;Core</PackageTags>
+    <Authors>Float</Authors>
+    <Company>Float</Company>
+    <Deterministic>true</Deterministic>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Float.TinCan" Version="1.0.3.22" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Tasks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\FloatStrings.de.Designer.cs">
+      <DependentUpon>FloatStrings.de.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\FloatStrings.Designer.cs">
+      <DependentUpon>FloatStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\FloatStrings.en.Designer.cs">
+      <DependentUpon>FloatStrings.en.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\FloatStrings.es.Designer.cs">
+      <DependentUpon>FloatStrings.es.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\FloatStrings.fr.Designer.cs">
+      <DependentUpon>FloatStrings.fr.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\FloatStrings.it.Designer.cs">
+      <DependentUpon>FloatStrings.it.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\FloatStrings.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FloatStrings.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\FloatStrings.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FloatStrings.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\FloatStrings.es.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FloatStrings.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\FloatStrings.fr.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FloatStrings.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\FloatStrings.it.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FloatStrings.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\FloatStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FloatStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
