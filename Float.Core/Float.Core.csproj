@@ -5,6 +5,7 @@
     <CodeAnalysisRuleSet>$(SolutionDir)\stylecop.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\$(Configuration)\netstandard2.0\Float.Core.xml</DocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(SolutionDir)\stylecop.json" />
@@ -20,12 +21,7 @@
     <Company>Float</Company>
     <Deterministic>true</Deterministic>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LangVersion>9.0</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LangVersion>9.0</LangVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Float.TinCan" Version="1.0.3.27" />
