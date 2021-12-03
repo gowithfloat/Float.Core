@@ -19,14 +19,14 @@ namespace Float.Core.Tests
         const string Password = "***REMOVED***";
         readonly Uri Url = new ("***REMOVED***");
 
-        [Fact]
+        [Fact(Skip = "tk")]
         public async Task TestOAuthAsync()
         {
             var auth = new OAuth2Strategy(Url, ClientId, ClientSecret, new NonPersistentSecureStore(), grantType: OAuth2GrantType.ClientCredentials);
             Assert.True(await auth.Login());
         }
 
-        [Fact]
+        [Fact(Skip = "tk")]
         public async Task TestRequestWithAuthAsync()
         {
             var auth = new OAuth2Strategy(Url, ClientId, ClientSecret, new NonPersistentSecureStore(), grantType: OAuth2GrantType.Password);
@@ -38,7 +38,7 @@ namespace Float.Core.Tests
             Assert.NotEmpty(response.Content);
         }
 
-        [Fact]
+        [Fact(Skip = "tk")]
         public async Task TestBatchRequestsWithAuthAsync()
         {
             var auth = new OAuth2Strategy(Url, ClientId, ClientSecret, new NonPersistentSecureStore(), grantType: OAuth2GrantType.Password);
@@ -69,7 +69,7 @@ namespace Float.Core.Tests
             Assert.Single(responses.Distinct());
         }
 
-        [Fact]
+        [Fact(Skip = "tk")]
         public async Task TestLogout()
         {
             var auth = new OAuth2Strategy(Url, ClientId, ClientSecret, new NonPersistentSecureStore(), grantType: OAuth2GrantType.Password);
