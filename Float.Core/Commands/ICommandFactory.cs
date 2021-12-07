@@ -1,9 +1,4 @@
-﻿// <copyright file="ICommandFactory.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace Float.Core.Commands
 {

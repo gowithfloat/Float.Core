@@ -1,9 +1,4 @@
-﻿// <copyright file="BasicHTTPAuthStrategy.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;

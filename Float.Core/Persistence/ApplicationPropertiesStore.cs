@@ -1,9 +1,4 @@
-﻿// <copyright file="ApplicationPropertiesStore.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-using Float.Core.Exceptions;
+﻿using Float.Core.Exceptions;
 using Float.Core.Extensions;
 using Xamarin.Forms;
 

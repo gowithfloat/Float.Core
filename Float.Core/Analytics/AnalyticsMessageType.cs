@@ -1,9 +1,4 @@
-﻿// <copyright file="AnalyticsMessageType.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-namespace Float.Core.Analytics
+﻿namespace Float.Core.Analytics
 {
     /// <summary>
     /// Messages posted to the MessagingCenter for analytics.

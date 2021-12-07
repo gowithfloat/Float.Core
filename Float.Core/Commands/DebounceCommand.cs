@@ -1,9 +1,4 @@
-﻿// <copyright file="DebounceCommand.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;

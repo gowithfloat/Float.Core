@@ -1,9 +1,4 @@
-﻿// <copyright file="ViewModel.tests.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Float.Core.Collections;

@@ -1,9 +1,4 @@
-﻿// <copyright file="NonPersistentSecureStore.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using Float.Core.Persistence;
 

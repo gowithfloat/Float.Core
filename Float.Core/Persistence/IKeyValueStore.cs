@@ -1,9 +1,4 @@
-﻿// <copyright file="IKeyValueStore.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
-namespace Float.Core.Persistence
+﻿namespace Float.Core.Persistence
 {
     /// <summary>
     /// Key value data store.

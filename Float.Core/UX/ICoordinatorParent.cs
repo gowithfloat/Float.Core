@@ -1,8 +1,3 @@
-// <copyright file="ICoordinatorParent.cs" company="Float">
-// Copyright (c) 2021 Float, All rights reserved.
-// Shared under an MIT license. See license.md for details.
-// </copyright>
-
 namespace Float.Core.UX
 {
     /// <summary>
