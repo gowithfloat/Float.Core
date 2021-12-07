@@ -1,4 +1,4 @@
-## Float.Core
+## Float.Core [![Test](https://github.com/gowithfloat/Float.Core/actions/workflows/test.yml/badge.svg)](https://github.com/gowithfloat/Float.Core/actions/workflows/test.yml)
 
 This is a collection of common utilities used by Float projects.
 
