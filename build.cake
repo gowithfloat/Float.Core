@@ -14,22 +14,21 @@ using System;
 
 // Parameters and arguments
 
-var task = Argument("task", "Build");
-var projectName = Argument("projectName", "Float.Core");
-var configuration = Argument("configuration", "Debug");
-var nugetUrl = Argument<Uri>("nugetUrl", null);
-var nugetToken = Argument("nugetToken", string.Empty);
-var restoreAssemblyInfo = Argument("restoreAssemblyInfo", true);
+readonly string task = Argument("task", "Build");
+readonly string projectName = Argument("projectName", "Float.Core");
+readonly string configuration = Argument("configuration", "Debug");
+readonly Uri nugetUrl = Argument<Uri>("nugetUrl", null);
+readonly string nugetToken = Argument("nugetToken", string.Empty);
 
 // Derived global parameters
 
-var root = MakeAbsolute(new DirectoryPath("./"));
-var isReleaseBuild = configuration == "Release";
-var netAssemblyInfoLocation = File($"./{projectName}/Properties/AssemblyInfo.cs");
-var testProjectName = $"{projectName}.Tests";
-var solution = $"{projectName}.sln";
+readonly var root = MakeAbsolute(new DirectoryPath("./"));
+readonly var isReleaseBuild = configuration == "Release";
+readonly var netAssemblyInfoLocation = File($"./{projectName}/Properties/AssemblyInfo.cs");
+readonly var testProjectName = $"{projectName}.Tests";
+readonly var solution = $"{projectName}.sln";
 
-var project = new
+readonly var project = new
 {
     Main = $"./{projectName}/{projectName}.csproj",
     Test = $"./{testProjectName}/{testProjectName}.csproj",
@@ -186,11 +185,6 @@ Task("Deploy")
             }
         );
     });
-
-Teardown(context =>
-{
-    // assembly info restoration is disabled as it was throwing an exception in LibGit2Sharp
-});
 
 // Run
 
