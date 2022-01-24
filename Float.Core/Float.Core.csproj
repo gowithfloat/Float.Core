@@ -1,40 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Float.Core</AssemblyName>
+    <AssemblyAuthor>Float</AssemblyAuthor>
+    <AssemblyDescription>Common utility code used by Float projects.</AssemblyDescription>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <CodeAnalysisRuleSet>$(SolutionDir)\stylecop.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\$(Configuration)\netstandard2.0\Float.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Title>$(AssemblyName)</Title>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(SolutionDir)\stylecop.json" />
   </ItemGroup>
-  <PropertyGroup>
-  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' " />
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <PackageId>Float.Core</PackageId>
-    <Title>Float.Core</Title>
-    <PackageDescription>Common Float code.</PackageDescription>
-    <PackageTags>Float;Core</PackageTags>
-    <Authors>Float</Authors>
-    <Company>Float</Company>
+    <PackageDescription>$(AssemblyDescription)</PackageDescription>
+    <Summary>$(AssemblyDescription)</Summary>
+    <Description>$(AssemblyDescription)</Description>
+    <Authors>$(AssemblyAuthor)</Authors>
+    <Owners>$(AssemblyAuthor)</Owners>
+    <PackOnBuild>true</PackOnBuild>
     <Deterministic>true</Deterministic>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Float.TinCan" Version="1.0.3.27" />
+    <PackageReference Include="Float.TinCan" Version="1.0.3.29" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -87,5 +88,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>FloatStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../readme.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
