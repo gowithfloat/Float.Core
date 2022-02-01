@@ -237,6 +237,15 @@ namespace Float.Core.ViewModels
         }
 
         /// <summary>
+        /// Refreshes the view model order based on the order of the models.
+        /// </summary>
+        protected virtual void RefreshViewModelOrder()
+        {
+            ClearViewModels();
+            AddViewModels(Models);
+        }
+
+        /// <summary>
         /// Handles a change in the filter settings.
         /// </summary>
         /// <param name="sender">The filter that changed.</param>
