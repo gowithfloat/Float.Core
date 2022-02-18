@@ -7,8 +7,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Float.Core.Collections;
+using Float.Core.Compatibility;
 using Float.Core.Extensions;
-using Xamarin.Forms;
 
 namespace Float.Core.ViewModels
 {
@@ -252,7 +252,7 @@ namespace Float.Core.ViewModels
         /// </summary>
         protected virtual void OnElementsChanged()
         {
-            Device.BeginInvokeOnMainThread(() =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 OnPropertyChanged(nameof(Elements));
                 collectionChangedHandler?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
