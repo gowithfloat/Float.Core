@@ -7,36 +7,15 @@ using Float.Core.ViewModels;
 using Xunit;
 using System.Collections.ObjectModel;
 using Xunit.Abstractions;
+using System;
 
 namespace Float.Core.Tests
 {
     public class BaseCollectionViewModelTests : XunitContextBase
     {
-        class SmallModel : INotifyPropertyChanged
+        class CollectionViewModel : BaseCollectionViewModel<TestModel, TestViewModel>
         {
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            internal SmallModel(int id) => this.Mid = id;
-
-            internal int Mid { get; }
-
-            public override string ToString() => $"<{GetType()}: {nameof(Mid)}={Mid}>";
-        }
-
-        class SmallViewModel : ViewModel<SmallModel>
-        {
-            public SmallViewModel(SmallModel model) : base(model)
-            {
-            }
-
-            internal int Vmid => Model.Mid;
-
-            public override string ToString() => $"<{GetType()}: {nameof(Vmid)}={Vmid}>";
-        }
-
-        class SmallCollectionViewModel : BaseCollectionViewModel<SmallModel, SmallViewModel>
-        {
-            internal SmallCollectionViewModel(IEnumerable<SmallModel> modelCollection) : base(modelCollection)
+            internal CollectionViewModel(IEnumerable<TestModel> modelCollection) : base(modelCollection)
             {
             }
         }
@@ -48,13 +27,13 @@ namespace Float.Core.Tests
         [Fact]
         public void TestViewModelConstructionOrder()
         {
-            var coll = new ObservableCollection<SmallModel>
+            var coll = new ObservableCollection<TestModel>
             {
-                new SmallModel(0),
-                new SmallModel(1)
+                new TestModel(0),
+                new TestModel(1)
             };
 
-            var vm = new SmallCollectionViewModel(coll);
+            var vm = new CollectionViewModel(coll);
 
             Assert.Equal(2, vm.Count());
             Assert.Equal(0, vm.ElementAt(0).Vmid);
@@ -64,15 +43,15 @@ namespace Float.Core.Tests
         [Fact]
         public void TestViewModelAddOrder()
         {
-            var coll = new ObservableCollection<SmallModel>
+            var coll = new ObservableCollection<TestModel>
             {
-                new SmallModel(0),
-                new SmallModel(1)
+                new TestModel(0),
+                new TestModel(1)
             };
 
-            var vm = new SmallCollectionViewModel(coll);
+            var vm = new CollectionViewModel(coll);
 
-            coll.Add(new SmallModel(2));
+            coll.Add(new TestModel(2));
 
             Assert.Equal(3, vm.Count());
             Assert.Equal(0, vm.ElementAt(0).Vmid);
@@ -83,20 +62,45 @@ namespace Float.Core.Tests
         [Fact]
         public void TestViewModelInsertOrder()
         {
-            var coll = new ObservableCollection<SmallModel>
+            var coll = new ObservableCollection<TestModel>
             {
-                new SmallModel(0),
-                new SmallModel(1)
+                new TestModel(0),
+                new TestModel(1)
             };
 
-            var vm = new SmallCollectionViewModel(coll);
+            var vm = new CollectionViewModel(coll);
 
-            coll.Insert(0, new SmallModel(-1));
+            coll.Insert(0, new TestModel(-1));
 
             Assert.Equal(3, vm.Count());
-            Assert.Equal(-1, vm.ElementAt(0).Vmid);
-            Assert.Equal(0, vm.ElementAt(1).Vmid);
-            Assert.Equal(1, vm.ElementAt(2).Vmid);
+            Assert.Equal(0, vm.ElementAt(0).Vmid);
+            Assert.Equal(1, vm.ElementAt(1).Vmid);
+            Assert.Equal(-1, vm.ElementAt(2).Vmid);
+        }
+
+        [Fact]
+        public void TestViewModelMultipleInsertOrder()
+        {
+            var m0 = new TestModel(0);
+            var m1 = new TestModel(1);
+            var m2 = new TestModel(2);
+            var m3 = new TestModel(3);
+
+            var coll = new ObservableCollection<TestModel>
+            {
+                m2,
+            };
+
+            var vm = new CollectionViewModel(coll);
+
+            coll.Insert(m0.Mid, m0);
+            Assert.Equal(m0, vm.ElementAt(1).UnderlyingModel);
+
+            coll.Insert(m1.Mid, m1);
+            Assert.Equal(m1, vm.ElementAt(2).UnderlyingModel);
+
+            coll.Insert(m3.Mid, m3);
+            Assert.Equal(m3, vm.ElementAt(3).UnderlyingModel);
         }
     }
 }
