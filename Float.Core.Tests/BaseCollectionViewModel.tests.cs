@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Float.Core.ViewModels;
 using Xunit;
 using System.Collections.ObjectModel;
+using Xunit.Abstractions;
 
 namespace Float.Core.Tests
 {
-    public class BaseCollectionViewModelTests
+    public class BaseCollectionViewModelTests : XunitContextBase
     {
         class SmallModel : INotifyPropertyChanged
         {
@@ -18,6 +19,8 @@ namespace Float.Core.Tests
             internal SmallModel(int id) => this.Mid = id;
 
             internal int Mid { get; }
+
+            public override string ToString() => $"<{GetType()}: {nameof(Mid)}={Mid}>";
         }
 
         class SmallViewModel : ViewModel<SmallModel>
@@ -27,6 +30,8 @@ namespace Float.Core.Tests
             }
 
             internal int Vmid => Model.Mid;
+
+            public override string ToString() => $"<{GetType()}: {nameof(Vmid)}={Vmid}>";
         }
 
         class SmallCollectionViewModel : BaseCollectionViewModel<SmallModel, SmallViewModel>
@@ -36,7 +41,7 @@ namespace Float.Core.Tests
             }
         }
 
-        public BaseCollectionViewModelTests()
+        public BaseCollectionViewModelTests(ITestOutputHelper output) : base(output)
         {
         }
 
