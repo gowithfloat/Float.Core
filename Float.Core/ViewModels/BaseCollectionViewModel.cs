@@ -306,11 +306,16 @@ namespace Float.Core.ViewModels
 
             foreach (var model in modelCollection.OfType<TModel>())
             {
-                var viewModel = ConvertModelToViewModel(model);
-
-                if (viewModel != null)
+                if (ConvertModelToViewModel(model) is TViewModel viewModel)
                 {
-                    viewModels.Add(viewModel);
+                    if (Models is IList list && list.IndexOf(model) is int idx && idx > -1)
+                    {
+                        viewModels.Insert(idx, viewModel);
+                    }
+                    else
+                    {
+                        viewModels.Add(viewModel);
+                    }
 
                     if (HasSubscribers)
                     {
