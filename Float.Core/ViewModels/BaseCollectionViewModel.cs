@@ -20,11 +20,6 @@ namespace Float.Core.ViewModels
     /// <typeparam name="TViewModel">The type of the viewmodel in this collection.</typeparam>
     public abstract class BaseCollectionViewModel<TModel, TViewModel> : BaseViewModel, IEnumerable<TViewModel>, INotifyCollectionChanged where TModel : INotifyPropertyChanged where TViewModel : ViewModel<TModel>
     {
-        /// <summary>
-        /// The view model representations of the models.
-        /// </summary>
-        readonly List<TViewModel> viewModels = new ();
-
         NotifyCollectionChangedEventHandler collectionChangedHandler;
 
         /// <summary>
@@ -107,7 +102,7 @@ namespace Float.Core.ViewModels
         /// Gets all view models, regardless if they're impacted by the current filter.
         /// </summary>
         /// <value>All elements.</value>
-        public IEnumerable<TViewModel> AllElements => viewModels;
+        public IEnumerable<TViewModel> AllElements => ViewModels;
 
         /// <summary>
         /// Gets only the filtered view models.
@@ -120,10 +115,10 @@ namespace Float.Core.ViewModels
             {
                 if (Filter == null)
                 {
-                    return viewModels;
+                    return ViewModels;
                 }
 
-                return viewModels.Where(vm => Filter.Matches(vm.UnderlyingModel));
+                return ViewModels.Where(vm => Filter.Matches(vm.UnderlyingModel));
             }
         }
 
@@ -132,6 +127,12 @@ namespace Float.Core.ViewModels
         /// </summary>
         /// <value>The underlying collection of models that are represented by this view model collection.</value>
         protected IEnumerable<TModel> Models { get; }
+
+        /// <summary>
+        /// Gets the view model representations of the models.
+        /// </summary>
+        /// <value>The view models.</value>
+        protected List<TViewModel> ViewModels { get; } = new ();
 
         /// <inheritdoc />
         protected override bool HasSubscribers => base.HasSubscribers || collectionChangedHandler?.GetInvocationList().Length > 0;
@@ -259,6 +260,34 @@ namespace Float.Core.ViewModels
             });
         }
 
+        /// <summary>
+        /// Adds view models for the specified models.
+        /// </summary>
+        /// <remarks>
+        /// The caller is responsible for triggering a change event on Elements and AllElements.
+        /// </remarks>
+        /// <param name="modelCollection">Model collection.</param>
+        protected virtual void AddViewModels(IEnumerable modelCollection)
+        {
+            if (modelCollection == null)
+            {
+                return;
+            }
+
+            foreach (var model in modelCollection.OfType<TModel>())
+            {
+                if (ConvertModelToViewModel(model) is TViewModel viewModel)
+                {
+                    ViewModels.Add(viewModel);
+
+                    if (HasSubscribers)
+                    {
+                        model.PropertyChanged += OnModelPropertyChanged;
+                    }
+                }
+            }
+        }
+
         /// <inheritdoc />
         protected override void OnObservingBegan()
         {
@@ -291,41 +320,6 @@ namespace Float.Core.ViewModels
         }
 
         /// <summary>
-        /// Adds view models for the specified models.
-        /// </summary>
-        /// <remarks>
-        /// The caller is responsible for triggering a change event on Elements and AllElements.
-        /// </remarks>
-        /// <param name="modelCollection">Model collection.</param>
-        void AddViewModels(IEnumerable modelCollection)
-        {
-            if (modelCollection == null)
-            {
-                return;
-            }
-
-            foreach (var model in modelCollection.OfType<TModel>())
-            {
-                if (ConvertModelToViewModel(model) is TViewModel viewModel)
-                {
-                    if (Models is IList list && list.IndexOf(model) is int idx && idx > -1)
-                    {
-                        viewModels.Insert(idx, viewModel);
-                    }
-                    else
-                    {
-                        viewModels.Add(viewModel);
-                    }
-
-                    if (HasSubscribers)
-                    {
-                        model.PropertyChanged += OnModelPropertyChanged;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Removes the view models.
         /// </summary>
         /// <remarks>
@@ -341,11 +335,11 @@ namespace Float.Core.ViewModels
 
             foreach (var model in modelCollection.OfType<TModel>())
             {
-                var vms = viewModels.Where(vm => model.Equals(vm.UnderlyingModel));
+                var vms = ViewModels.Where(vm => model.Equals(vm.UnderlyingModel));
 
                 foreach (var vm in vms)
                 {
-                    viewModels.Remove(vm);
+                    ViewModels.Remove(vm);
                 }
 
                 model.PropertyChanged -= OnModelPropertyChanged;
@@ -360,12 +354,12 @@ namespace Float.Core.ViewModels
         /// </remarks>
         void ClearViewModels()
         {
-            foreach (var viewModel in viewModels)
+            foreach (var viewModel in ViewModels)
             {
                 viewModel.UnderlyingModel.PropertyChanged -= OnModelPropertyChanged;
             }
 
-            viewModels.Clear();
+            ViewModels.Clear();
         }
 
         /// <summary>
