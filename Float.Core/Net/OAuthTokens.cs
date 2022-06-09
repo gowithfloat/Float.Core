@@ -17,14 +17,15 @@ namespace Float.Core.Net
         /// <param name="accessToken">Access token.</param>
         /// <param name="refreshToken">Refresh token.</param>
         /// <param name="durationSeconds">Duration the the token is valid for.</param>
-        public OAuthTokens(string accessToken, string refreshToken, int durationSeconds)
+        /// <param name="created">The timestamp this token was created.</param>
+        public OAuthTokens(string accessToken, string refreshToken, int durationSeconds, DateTime? created = null)
         {
             if (string.IsNullOrWhiteSpace(accessToken))
             {
                 throw new InvalidStringArgumentException(nameof(accessToken));
             }
 
-            timeCreated = DateTime.Now;
+            timeCreated = created ?? DateTime.Now;
             AccessToken = accessToken;
             RefreshToken = refreshToken;
             DurationSeconds = durationSeconds;
@@ -47,6 +48,12 @@ namespace Float.Core.Net
         /// </summary>
         /// <value>The duration.</value>
         public int DurationSeconds { get; }
+
+        /// <summary>
+        /// Gets the date that this token expires.
+        /// </summary>
+        /// <value>The expiration date.</value>
+        public DateTime Expires => timeCreated.AddSeconds(DurationSeconds);
 
         /// <summary>
         /// Gets a value indicating whether the access token is expiring soon, and therefore if it should be refreshed.

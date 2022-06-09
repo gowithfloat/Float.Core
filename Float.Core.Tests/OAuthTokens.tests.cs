@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Float.Core.Net;
 using Newtonsoft.Json;
 using Xunit;
@@ -7,6 +8,17 @@ namespace Float.Core.Tests
 {
     public class OAuthTokensTests
     {
+        [Fact]
+        public void ComputesExpirationDate()
+        {
+            var now = DateTime.Now;
+            var duration = 10;
+            var tokens = new OAuthTokens("access token", "refresh token", duration, now);
+
+
+            Assert.Equal(now.AddSeconds(duration), tokens.Expires);
+        }
+
         [Fact]
         public async void Serializable()
         {
