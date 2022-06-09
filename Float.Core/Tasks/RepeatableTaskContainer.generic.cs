@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Float.Core.Tasks
@@ -12,6 +13,7 @@ namespace Float.Core.Tasks
     public class RepeatableTaskContainer<TResult>
     {
         readonly Func<Task<TResult>> taskFactory;
+        readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         Task<TResult> runningTask;
 
         /// <summary>
@@ -24,15 +26,25 @@ namespace Float.Core.Tasks
         }
 
         /// <summary>
+        /// Gets a value indicating whether the task is currently running.
+        /// </summary>
+        /// <value><c>true</c> if the task is currently running.</value>
+        public bool IsRunning => runningTask != null;
+
+        /// <summary>
         /// Run the given function asynchronously and return the result to awaiters.
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         public async Task<TResult> Run()
         {
+            // Ensure we only ever have one running instance of the task.
+            semaphore.Wait();
             if (runningTask == null)
             {
                 runningTask = taskFactory();
             }
+
+            semaphore.Release();
 
             try
             {

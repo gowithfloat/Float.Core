@@ -196,7 +196,10 @@ namespace Float.Core.Net
 
             var tokens = await GetTokens().ConfigureAwait(false);
 
-            if (tokens?.ShouldRefresh == true)
+            // If the access token needs to be refreshed or we are already
+            // refreshing the access token, then we should wait here until
+            // we get a new token.
+            if (tokens?.ShouldRefresh == true || refreshTokensContainer.IsRunning)
             {
                 await refreshTokensContainer.Run().ConfigureAwait(false);
             }
