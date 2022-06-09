@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Float.Core.Tasks
@@ -11,6 +12,7 @@ namespace Float.Core.Tasks
     public class RepeatableTaskContainer
     {
         readonly Func<Task> taskFactory;
+        readonly SemaphoreSlim semaphore = new SemaphoreSlim(1);
         Task runningTask;
 
         /// <summary>
@@ -28,10 +30,14 @@ namespace Float.Core.Tasks
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         public async Task Run()
         {
+            // Ensure we only ever have one running instance of the task.
+            semaphore.Wait();
             if (runningTask == null)
             {
                 runningTask = taskFactory();
             }
+
+            semaphore.Release();
 
             try
             {
