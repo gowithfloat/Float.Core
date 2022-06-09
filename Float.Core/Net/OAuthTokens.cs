@@ -9,7 +9,6 @@ namespace Float.Core.Net
     public sealed class OAuthTokens
     {
         const int ExpireSoonThresholdSeconds = 60 * 10; // 10 minutes
-        readonly DateTime timeCreated;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OAuthTokens"/> class.
@@ -25,11 +24,17 @@ namespace Float.Core.Net
                 throw new InvalidStringArgumentException(nameof(accessToken));
             }
 
-            timeCreated = created ?? DateTime.Now;
+            Created = created ?? DateTime.Now;
             AccessToken = accessToken;
             RefreshToken = refreshToken;
             DurationSeconds = durationSeconds;
         }
+
+        /// <summary>
+        /// Gets the date this token was created.
+        /// </summary>
+        /// <value>The date the token was created.</value>
+        public DateTime Created { get; }
 
         /// <summary>
         /// Gets the access token.
@@ -53,13 +58,13 @@ namespace Float.Core.Net
         /// Gets the date that this token expires.
         /// </summary>
         /// <value>The expiration date.</value>
-        public DateTime Expires => timeCreated.AddSeconds(DurationSeconds);
+        public DateTime Expires => Created.AddSeconds(DurationSeconds);
 
         /// <summary>
         /// Gets a value indicating whether the access token is expiring soon, and therefore if it should be refreshed.
         /// </summary>
         /// <value><c>true</c>, if token should be refreshed, <c>false</c> otherwise.</value>
-        public bool ShouldRefresh => (DateTime.Now - timeCreated).Seconds >= DurationSeconds - ExpireSoonThresholdSeconds;
+        public bool ShouldRefresh => (DateTime.Now - Created).Seconds >= DurationSeconds - ExpireSoonThresholdSeconds;
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents the current <see cref="OAuthTokens"/>.
