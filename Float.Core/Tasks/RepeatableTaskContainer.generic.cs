@@ -26,6 +26,12 @@ namespace Float.Core.Tasks
         }
 
         /// <summary>
+        /// Gets a value indicating whether the task is currently running.
+        /// </summary>
+        /// <value><c>true</c> if the task is currently running.</value>
+        public bool IsRunning => runningTask != null;
+
+        /// <summary>
         /// Run the given function asynchronously and return the result to awaiters.
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
