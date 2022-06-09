@@ -64,7 +64,7 @@ namespace Float.Core.Net
         /// Gets a value indicating whether the access token is expiring soon, and therefore if it should be refreshed.
         /// </summary>
         /// <value><c>true</c>, if token should be refreshed, <c>false</c> otherwise.</value>
-        public bool ShouldRefresh => (DateTime.Now - Created).Seconds >= DurationSeconds - ExpireSoonThresholdSeconds;
+        public bool ShouldRefresh => DateTime.Now.AddSeconds(ExpireSoonThresholdSeconds) > Expires;
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents the current <see cref="OAuthTokens"/>.
