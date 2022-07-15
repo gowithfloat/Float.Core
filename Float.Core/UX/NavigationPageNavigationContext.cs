@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Float.Core.Compatibility;
 using Xamarin.Forms;
 
 namespace Float.Core.UX
@@ -67,7 +68,7 @@ namespace Float.Core.UX
         /// <inheritdoc />
         public void PushPage(Page page, bool animated = true)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 navigationPage.PushAsync(page, animated);
             });
@@ -76,7 +77,7 @@ namespace Float.Core.UX
         /// <inheritdoc />
         public void PopPage(bool animated = true)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 navigationPage.PopAsync(animated);
             });
@@ -85,7 +86,7 @@ namespace Float.Core.UX
         /// <inheritdoc />
         public void PresentPage(Page page, bool animated = true)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 navigationPage.Navigation.PushModalAsync(page, animated);
             });
@@ -94,7 +95,7 @@ namespace Float.Core.UX
         /// <inheritdoc />
         public void DismissPage(bool animated = true)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 if (HasModal)
                 {
@@ -106,7 +107,7 @@ namespace Float.Core.UX
         /// <inheritdoc />
         public void Reset(bool animated)
         {
-            Device.BeginInvokeOnMainThread(async () =>
+            DeviceProxy.BeginInvokeOnMainThread(async () =>
             {
                 await navigationPage.PopToRootAsync(animated).ConfigureAwait(false);
 

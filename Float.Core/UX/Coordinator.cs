@@ -1,4 +1,5 @@
 using System;
+using Float.Core.Compatibility;
 using Xamarin.Forms;
 
 namespace Float.Core.UX
@@ -219,7 +220,7 @@ namespace Float.Core.UX
                 {
                     var main = Application.Current.MainPage as MasterDetailPage;
                     var mainNav = main.Master as NavigationPage;
-                    Device.BeginInvokeOnMainThread(() =>
+                    DeviceProxy.BeginInvokeOnMainThread(() =>
                     {
                         mainNav.PushAsync(page);
                     });
@@ -238,7 +239,7 @@ namespace Float.Core.UX
         [Obsolete("Use navigationContext.ShowDetailPage instead")]
         protected void ShowPageInDetail(Page page)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 var main = Application.Current.MainPage as MasterDetailPage;
                 if (page is NavigationPage)

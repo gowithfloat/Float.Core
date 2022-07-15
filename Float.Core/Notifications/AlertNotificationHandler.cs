@@ -1,4 +1,5 @@
 ﻿using System;
+using Float.Core.Compatibility;
 using Float.Core.Extensions;
 using Float.Core.L10n;
 using Float.Core.Resources;
@@ -62,7 +63,7 @@ namespace Float.Core.Notifications
         /// <param name="message">The body of the alert.</param>
         protected void DisplayAlert(string title, string message)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 var page = context ?? Application.Current.MainPage;
                 page.DisplayAlert(title, message, Localize.String("OK"));
