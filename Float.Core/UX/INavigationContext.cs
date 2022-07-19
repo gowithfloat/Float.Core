@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Float.Core.UX
@@ -59,7 +60,7 @@ namespace Float.Core.UX
         /// Dismisses a modally-presented page.
         /// </summary>
         /// <param name="animated">Whether to animate the transition.</param>
-        void DismissPage(bool animated = true);
+        Task DismissPage(bool animated = true);
 
         /// <summary>
         /// Reset the navigation context back to the beginning.

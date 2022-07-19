@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Float.Core.Compatibility;
 using Xamarin.Forms;
 
@@ -93,13 +94,13 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc />
-        public void DismissPage(bool animated = true)
+        public async Task DismissPage(bool animated = true)
         {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
+            await Device.InvokeOnMainThreadAsync(async () =>
             {
                 if (HasModal)
                 {
-                    navigationPage.Navigation.PopModalAsync(animated);
+                    await navigationPage.Navigation.PopModalAsync(animated);
                 }
             });
         }
