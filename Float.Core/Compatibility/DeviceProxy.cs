@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Float.Core.Compatibility
@@ -25,6 +26,28 @@ namespace Float.Core.Compatibility
             {
                 action.Invoke();
             }
+        }
+
+        internal static async Task InvokeOnMainThreadAsync(Action action)
+        {
+            try
+            {
+                var method = typeof(Device).GetMethod("InvokeOnMainThreadAsync", BindingFlags.Static | BindingFlags.Public);
+                await method?.InvokeAsync(null, new[] { action });
+            }
+            catch (Exception e) when (e is TargetInvocationException || e is InvalidOperationException)
+            {
+                var result = action.BeginInvoke(null, null);
+                action.EndInvoke(result);
+            }
+        }
+
+        internal static async Task<object> InvokeAsync(this MethodInfo @this, object obj, params object[] parameters)
+        {
+            var task = (Task)@this.Invoke(obj, parameters);
+            await task.ConfigureAwait(false);
+            var resultProperty = task.GetType().GetProperty("Result");
+            return resultProperty.GetValue(task);
         }
     }
 }

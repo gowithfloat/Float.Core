@@ -44,10 +44,25 @@ namespace Float.Core.UX
         void PushPage(Page page, bool animated = true);
 
         /// <summary>
+        /// Pushs a page onto the existing navigation stack.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        /// <param name="animated">Whether to animate the transition.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PushPageAsync(Page page, bool animated = true);
+
+        /// <summary>
         /// Pop the top-most page off the existing navigation stack.
         /// </summary>
         /// <param name="animated">Whether to animate the transition.</param>
         void PopPage(bool animated = true);
+
+        /// <summary>
+        /// Pop the top-most page off the existing navigation stack.
+        /// </summary>
+        /// <param name="animated">Whether to animate the transition.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PopPageAsync(bool animated = true);
 
         /// <summary>
         /// Modally present the specified page in the current context.
@@ -57,10 +72,25 @@ namespace Float.Core.UX
         void PresentPage(Page page, bool animated = true);
 
         /// <summary>
+        /// Modally present the specified page in the current context.
+        /// </summary>
+        /// <param name="page">The page.</param>
+        /// <param name="animated">Whether to animate the transition.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PresentPageAsync(Page page, bool animated = true);
+
+        /// <summary>
         /// Dismisses a modally-presented page.
         /// </summary>
         /// <param name="animated">Whether to animate the transition.</param>
-        Task DismissPage(bool animated = true);
+        void DismissPage(bool animated = true);
+
+        /// <summary>
+        /// Dismisses a modally-presented page.
+        /// </summary>
+        /// <param name="animated">Whether to animate the transition.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task DismissPageAsync(bool animated = true);
 
         /// <summary>
         /// Reset the navigation context back to the beginning.

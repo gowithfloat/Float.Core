@@ -93,15 +93,54 @@ namespace Float.Core.UX
             });
         }
 
-        /// <inheritdoc />
-        public async Task DismissPage(bool animated = true)
+        /// <inheritdoc/>
+        public void DismissPage(bool animated = true)
         {
-            await Device.InvokeOnMainThreadAsync(async () =>
+            DeviceProxy.BeginInvokeOnMainThread(() =>
             {
                 if (HasModal)
                 {
-                    await navigationPage.Navigation.PopModalAsync(animated);
+                    navigationPage.Navigation.PopModalAsync(animated);
                 }
+            });
+        }
+
+        /// <inheritdoc />
+        public async Task DismissPageAsync(bool animated = true)
+        {
+            if (HasModal)
+            {
+                await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+                {
+                    await navigationPage.Navigation.PopModalAsync(animated);
+                });
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task PushPageAsync(Page page, bool animated = true)
+        {
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+            {
+                await navigationPage.PushAsync(page, animated);
+            });
+        }
+
+        /// <inheritdoc/>
+        public async Task PopPageAsync(bool animated = true)
+        {
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+            {
+                await navigationPage.PopAsync(animated);
+            });
+        }
+
+        /// <inheritdoc/>
+        public async Task PresentPageAsync(Page page, bool animated = true)
+        {
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+            {
+                await navigationPage.Navigation.PushModalAsync(page, animated);
             });
         }
 
