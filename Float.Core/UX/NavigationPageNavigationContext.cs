@@ -93,7 +93,7 @@ namespace Float.Core.UX
             });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void DismissPage(bool animated = true)
         {
             DeviceProxy.BeginInvokeOnMainThread(() =>
