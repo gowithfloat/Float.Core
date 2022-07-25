@@ -108,13 +108,13 @@ namespace Float.Core.UX
         /// <inheritdoc />
         public async Task DismissPageAsync(bool animated = true)
         {
-            if (HasModal)
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
             {
-                await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+                if (HasModal)
                 {
                     await navigationPage.Navigation.PopModalAsync(animated);
-                });
-            }
+                }
+            });
         }
 
         /// <inheritdoc/>
