@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Float.Core.Compatibility;
 using Xamarin.Forms;
 
@@ -45,62 +46,62 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc />
-        public void ShowOverviewPage(Page page, bool animated = true)
+        public async Task ShowOverviewPageAsync(Page page, bool animated = true)
         {
             var isDeeplyNavigated = navigationPage.Navigation.NavigationStack.Count > 1;
             if (isDeeplyNavigated)
             {
                 Reset(false);
-                PushPage(page, false);
+                await PushPageAsync(page, false);
             }
             else
             {
-                PushPage(page, animated);
+                await PushPageAsync(page, animated);
             }
         }
 
         /// <inheritdoc />
-        public void ShowDetailPage(Page page, bool animated = true)
+        public async Task ShowDetailPageAsync(Page page, bool animated = true)
         {
-            PushPage(page, animated);
+            await PushPageAsync(page, animated);
         }
 
         /// <inheritdoc />
-        public void PushPage(Page page, bool animated = true)
+        public async Task DismissPageAsync(bool animated = true)
         {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                navigationPage.PushAsync(page, animated);
-            });
-        }
-
-        /// <inheritdoc />
-        public void PopPage(bool animated = true)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                navigationPage.PopAsync(animated);
-            });
-        }
-
-        /// <inheritdoc />
-        public void PresentPage(Page page, bool animated = true)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                navigationPage.Navigation.PushModalAsync(page, animated);
-            });
-        }
-
-        /// <inheritdoc />
-        public void DismissPage(bool animated = true)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
             {
                 if (HasModal)
                 {
-                    navigationPage.Navigation.PopModalAsync(animated);
+                    await navigationPage.Navigation.PopModalAsync(animated);
                 }
+            });
+        }
+
+        /// <inheritdoc />
+        public async Task PushPageAsync(Page page, bool animated = true)
+        {
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+            {
+                await navigationPage.PushAsync(page, animated);
+            });
+        }
+
+        /// <inheritdoc />
+        public async Task PopPageAsync(bool animated = true)
+        {
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+            {
+                await navigationPage.PopAsync(animated);
+            });
+        }
+
+        /// <inheritdoc />
+        public async Task PresentPageAsync(Page page, bool animated = true)
+        {
+            await DeviceProxy.InvokeOnMainThreadAsync(async () =>
+            {
+                await navigationPage.Navigation.PushModalAsync(page, animated);
             });
         }
 
