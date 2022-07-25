@@ -117,7 +117,7 @@ namespace Float.Core.UX
             });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public async Task PushPageAsync(Page page, bool animated = true)
         {
             await DeviceProxy.InvokeOnMainThreadAsync(async () =>
@@ -126,7 +126,7 @@ namespace Float.Core.UX
             });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public async Task PopPageAsync(bool animated = true)
         {
             await DeviceProxy.InvokeOnMainThreadAsync(async () =>
@@ -135,7 +135,7 @@ namespace Float.Core.UX
             });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public async Task PresentPageAsync(Page page, bool animated = true)
         {
             await DeviceProxy.InvokeOnMainThreadAsync(async () =>
