@@ -1,5 +1,5 @@
 using System;
-using Float.Core.Compatibility;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Float.Core.UX
@@ -147,110 +147,39 @@ namespace Float.Core.UX
         /// This should only be used once the app's main page is a MasterDetailPage.
         /// </summary>
         /// <param name="page">The page to add to the stack.</param>
-        protected void PushPageAsync(Page page)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        protected async Task PushPageAsync(Page page)
         {
-            NavigationContext.PushPage(page);
+            await NavigationContext.PushPageAsync(page);
         }
 
         /// <summary>
         /// Convenience method to pop the top page off the navigation stack.
         /// </summary>
-        protected void PopPageAsync()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        protected async Task PopPageAsync()
         {
-            NavigationContext.PopPage();
+            await NavigationContext.PopPageAsync();
         }
 
         /// <summary>
         /// Convenience method to push a modal onto the navigation stack.
         /// </summary>
         /// <param name="page">The page to add to the stack as a modal.</param>
-        protected void PushModalAsync(Page page)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        protected async Task PushModalAsync(Page page)
         {
-            NavigationContext.PresentPage(page);
+            await NavigationContext.PresentPageAsync(page);
         }
 
         /// <summary>
         /// Convenience method to pop the current modal off of the navigation stack.
         /// Will only pop the modal if the modal stack has at least one page.
         /// </summary>
-        protected void PopModalAsync()
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        protected async Task PopModalAsync()
         {
-            NavigationContext.DismissPage();
-        }
-
-        /// <summary>
-        /// This method will show the page in a modal if the targeted device is a phone, while using the detail portion of the screen for tablets.
-        /// </summary>
-        /// <param name="page">The page to be presented.</param>
-        [Obsolete("Use navigationContext.Present instead")]
-        protected void ShowTemporary(Page page)
-        {
-            if (Device.Idiom == TargetIdiom.Tablet)
-            {
-                ShowPageInDetail(page);
-            }
-            else
-            {
-                PushModalAsync(page);
-            }
-        }
-
-        /// <summary>
-        /// Shows the page in a manner that will suit phone or tablet idioms.
-        /// </summary>
-        /// <param name="page">The page to be shown.</param>
-        /// <param name="hideMaster">If true, the master will hide using the isPresented boolean. This only applies to phone. Defaults to false.</param>
-        /// <param name="pushToMaster">If true, this will push the page onto the master side. This only applies to tablet.</param>
-        [Obsolete("Use navigationContext.ShowPage instead")]
-        protected void ShowPage(Page page, bool hideMaster = false, bool pushToMaster = false)
-        {
-            if (Device.Idiom == TargetIdiom.Phone)
-            {
-                PushPageAsync(page);
-
-                if (hideMaster)
-                {
-                    var main = Application.Current.MainPage as MasterDetailPage;
-                    main.IsPresented = false;
-                }
-            }
-            else
-            {
-                if (pushToMaster)
-                {
-                    var main = Application.Current.MainPage as MasterDetailPage;
-                    var mainNav = main.Master as NavigationPage;
-                    DeviceProxy.BeginInvokeOnMainThread(() =>
-                    {
-                        mainNav.PushAsync(page);
-                    });
-                }
-                else
-                {
-                    ShowPageInDetail(page);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Shows the page in the detail portion of the app.
-        /// </summary>
-        /// <param name="page">The page to show.</param>
-        [Obsolete("Use navigationContext.ShowDetailPage instead")]
-        protected void ShowPageInDetail(Page page)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                var main = Application.Current.MainPage as MasterDetailPage;
-                if (page is NavigationPage)
-                {
-                    main.Detail = page;
-                }
-                else
-                {
-                    main.Detail = new NavigationPage(page);
-                }
-            });
+            await NavigationContext.DismissPageAsync();
         }
 
         void BeginObservingManagedPage(Page page)

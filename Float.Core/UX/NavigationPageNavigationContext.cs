@@ -46,63 +46,24 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc />
-        public void ShowOverviewPage(Page page, bool animated = true)
+        public async Task ShowOverviewPageAsync(Page page, bool animated = true)
         {
             var isDeeplyNavigated = navigationPage.Navigation.NavigationStack.Count > 1;
             if (isDeeplyNavigated)
             {
                 Reset(false);
-                PushPage(page, false);
+                await PushPageAsync(page, false);
             }
             else
             {
-                PushPage(page, animated);
+                await PushPageAsync(page, animated);
             }
         }
 
         /// <inheritdoc />
-        public void ShowDetailPage(Page page, bool animated = true)
+        public async Task ShowDetailPageAsync(Page page, bool animated = true)
         {
-            PushPage(page, animated);
-        }
-
-        /// <inheritdoc />
-        public void PushPage(Page page, bool animated = true)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                navigationPage.PushAsync(page, animated);
-            });
-        }
-
-        /// <inheritdoc />
-        public void PopPage(bool animated = true)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                navigationPage.PopAsync(animated);
-            });
-        }
-
-        /// <inheritdoc />
-        public void PresentPage(Page page, bool animated = true)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                navigationPage.Navigation.PushModalAsync(page, animated);
-            });
-        }
-
-        /// <inheritdoc />
-        public void DismissPage(bool animated = true)
-        {
-            DeviceProxy.BeginInvokeOnMainThread(() =>
-            {
-                if (HasModal)
-                {
-                    navigationPage.Navigation.PopModalAsync(animated);
-                }
-            });
+            await PushPageAsync(page, animated);
         }
 
         /// <inheritdoc />

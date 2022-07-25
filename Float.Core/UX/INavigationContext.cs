@@ -26,7 +26,8 @@ namespace Float.Core.UX
         /// </summary>
         /// <param name="page">The page.</param>
         /// <param name="animated">Whether to animate the transition.</param>
-        void ShowOverviewPage(Page page, bool animated = true);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ShowOverviewPageAsync(Page page, bool animated = true);
 
         /// <summary>
         /// Show a detail page.
@@ -34,14 +35,8 @@ namespace Float.Core.UX
         /// </summary>
         /// <param name="page">The page.</param>
         /// <param name="animated">Whether to animate the transition.</param>
-        void ShowDetailPage(Page page, bool animated = true);
-
-        /// <summary>
-        /// Pushs a page onto the existing navigation stack.
-        /// </summary>
-        /// <param name="page">The page.</param>
-        /// <param name="animated">Whether to animate the transition.</param>
-        void PushPage(Page page, bool animated = true);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task ShowDetailPageAsync(Page page, bool animated = true);
 
         /// <summary>
         /// Pushs a page onto the existing navigation stack.
@@ -55,12 +50,6 @@ namespace Float.Core.UX
         /// Pop the top-most page off the existing navigation stack.
         /// </summary>
         /// <param name="animated">Whether to animate the transition.</param>
-        void PopPage(bool animated = true);
-
-        /// <summary>
-        /// Pop the top-most page off the existing navigation stack.
-        /// </summary>
-        /// <param name="animated">Whether to animate the transition.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task PopPageAsync(bool animated = true);
 
@@ -69,21 +58,8 @@ namespace Float.Core.UX
         /// </summary>
         /// <param name="page">The page.</param>
         /// <param name="animated">Whether to animate the transition.</param>
-        void PresentPage(Page page, bool animated = true);
-
-        /// <summary>
-        /// Modally present the specified page in the current context.
-        /// </summary>
-        /// <param name="page">The page.</param>
-        /// <param name="animated">Whether to animate the transition.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task PresentPageAsync(Page page, bool animated = true);
-
-        /// <summary>
-        /// Dismisses a modally-presented page.
-        /// </summary>
-        /// <param name="animated">Whether to animate the transition.</param>
-        void DismissPage(bool animated = true);
 
         /// <summary>
         /// Dismisses a modally-presented page.
