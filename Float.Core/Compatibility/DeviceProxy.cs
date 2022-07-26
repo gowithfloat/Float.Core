@@ -32,7 +32,7 @@ namespace Float.Core.Compatibility
         {
             try
             {
-                var method = typeof(Device).GetMethod("InvokeOnMainThreadAsync", BindingFlags.Static | BindingFlags.Public);
+                var method = typeof(Device).GetMethod("InvokeOnMainThreadAsync", new[] { typeof(Action) });
                 await method?.InvokeAsync(null, new[] { action });
             }
             catch (Exception e) when (e is TargetInvocationException || e is InvalidOperationException)
