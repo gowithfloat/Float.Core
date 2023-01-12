@@ -62,10 +62,10 @@ Task("GitVersion")
         var gitVersion = GitVersioningGetVersion();
 
         assemblyVersion = $"{gitVersion.AssemblyVersion}";
-        packageVersion = $"{gitVersion.AssemblyFileVersion}";
+        packageVersion = $"{gitVersion.NuGetPackageVersion}";
 
         Information($"Assembly version: {assemblyVersion}");
-        Information($"NuGet version: {gitVersion.AssemblyFileVersion}");
+        Information($"NuGet version: {packageVersion}");
         Information($"Informational version: {gitVersion.AssemblyInformationalVersion}");
 
         var visible = isReleaseBuild 
