@@ -161,7 +161,7 @@ Task("Deploy")
             throw new Exception("--nugetToken is required.");
         }
 
-        if (!(GetFiles($"./{projectName}/bin/{configuration}/*.nupkg").First() is FilePath packageFile))
+        if (!(GetFiles($"./{projectName}/bin/{configuration}/*[!symbols].nupkg").First() is FilePath packageFile))
         {
             throw new Exception("Unable to find NuGet package file.");
         }
@@ -181,7 +181,7 @@ Task("Deploy")
             },
             new []
             {
-                $"./{projectName}/bin/{configuration}/{projectName}.{assemblyVersion}.nupkg",
+                $"{packageFile}",
             }
         );
     });
