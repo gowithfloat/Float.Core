@@ -1,6 +1,12 @@
 ﻿using Float.Core.Exceptions;
 using Float.Core.Extensions;
+#if NETSTANDARD
 using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
+#endif
 
 namespace Float.Core.Persistence
 {
@@ -19,7 +25,7 @@ namespace Float.Core.Persistence
             {
                 throw new InvalidStringArgumentException(nameof(key));
             }
-
+#if NETSTANDARD
             // this is null when the app first starts up
             if (Application.Current == null)
             {
@@ -34,6 +40,14 @@ namespace Float.Core.Persistence
 
             Application.Current.Properties.Remove(key);
             Save();
+#else
+            if (!Preferences.Default.ContainsKey(key))
+            {
+                return;
+            }
+
+            Preferences.Default.Remove(key);
+#endif
         }
 
         /// <summary>
@@ -54,6 +68,7 @@ namespace Float.Core.Persistence
             {
                 return default;
             }
+#if NETSTANDARD
 
             // trying to get a non-existent key doesn't just return null, it causes an exception
             if (!Application.Current.Properties.ContainsKey(key))
@@ -62,6 +77,14 @@ namespace Float.Core.Persistence
             }
 
             var obj = Application.Current.Properties[key];
+#else
+            if (!Preferences.Default.ContainsKey(key))
+            {
+                return default;
+            }
+
+            var obj = Preferences.Default.Get<T>(key, default);
+#endif
 
             if (obj is T t)
             {
@@ -89,11 +112,16 @@ namespace Float.Core.Persistence
             {
                 return;
             }
+#if NETSTANDARD
 
             Application.Current.Properties[key] = value;
             Save();
+#else
+            Preferences.Default.Set(key, value);
+#endif
         }
 
+#if NETSTANDARD
         static void Save()
         {
             Application.Current.SavePropertiesAsync().OnFailure(task =>
@@ -103,5 +131,6 @@ namespace Float.Core.Persistence
 #endif
             });
         }
+#endif
     }
 }

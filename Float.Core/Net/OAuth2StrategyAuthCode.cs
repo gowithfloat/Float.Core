@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 using Float.Core.Events;
 using Float.Core.Extensions;
 using Float.Core.Persistence;
+#if NETSTANDARD
 using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+#endif
 
 namespace Float.Core.Net
 {

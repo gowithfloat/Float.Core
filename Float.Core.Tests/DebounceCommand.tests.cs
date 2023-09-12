@@ -1,7 +1,12 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Float.Core.Commands;
+#if NETCOREAPP
 using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+#endif
 using Xunit;
 
 namespace Float.Core.Tests

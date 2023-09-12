@@ -1,6 +1,11 @@
 ﻿using System;
 using Float.Core.Extensions;
+#if NETSTANDARD
 using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+#endif
 
 namespace Float.Core.UI
 {
