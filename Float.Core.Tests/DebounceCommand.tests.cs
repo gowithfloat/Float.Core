@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Float.Core.Commands;
-#if NETCOREAPP
+#if NETCOREAPP3_1
 using Xamarin.Forms;
 #else
 using Microsoft.Maui;

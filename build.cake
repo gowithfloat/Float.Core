@@ -112,7 +112,7 @@ Task("Test")
     {
         var testSettings = new DotNetCoreTestSettings 
         {
-            Loggers = new[] { "nunit" },
+            Loggers = new[] { "trx" },
         };
 
         var coverletSettings = new CoverletSettings 

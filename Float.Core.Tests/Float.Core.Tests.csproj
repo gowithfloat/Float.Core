@@ -3,6 +3,7 @@
     <TargetFrameworks>netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <LangVersion>9.0</LangVersion>
+    <UseMaui>true</UseMaui>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="../stylecop.json" />
@@ -27,8 +28,8 @@
       <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="[5.0.0.1874,6)" />
+      </PackageReference>
+      <PackageReference Include="Xamarin.Forms" Version="[5.0.0.1874,6)" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
