@@ -23,8 +23,10 @@ jobs:
         run: dotnet workload restore
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build and Set Assembly Version
-        run: ./build.sh --task=Build --configuration=Release
+      - name: Set Assembly Version
+        run: ./build.sh --task=GitVersion --configuration=Release
+      - name: Build Library
+        run: dotnet build --configuration Release --no-restore
       - name: Update Version
         run: sed -i "s/<Version><\/Version>/<Version>${{ github.event.release.name }}<\/Version>/" ./Float.TinCan/Float.TinCan.csproj
       - name: Pack and Upload
