@@ -2,7 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Float.Core.Compatibility;
+#if NETSTANDARD
 using Xamarin.Forms;
+using NetNavigationEventArgs = Xamarin.Forms.NavigationEventArgs;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using NetNavigationEventArgs = Microsoft.Maui.Controls.NavigationEventArgs;
+#endif
 
 namespace Float.Core.UX
 {
@@ -119,17 +126,17 @@ namespace Float.Core.UX
             });
         }
 
-        void HandlePopped(object sender, Xamarin.Forms.NavigationEventArgs e)
+        void HandlePopped(object sender, NetNavigationEventArgs e)
         {
             Navigated?.Invoke(navigationPage, new NavigationEventArgs(NavigationEventArgs.NavigationType.Popped, e.Page));
         }
 
-        void HandlePoppedToRoot(object sender, Xamarin.Forms.NavigationEventArgs e)
+        void HandlePoppedToRoot(object sender, NetNavigationEventArgs e)
         {
             Navigated?.Invoke(navigationPage, new NavigationEventArgs(NavigationEventArgs.NavigationType.Reset, navigationPage.RootPage));
         }
 
-        void HandlePushed(object sender, Xamarin.Forms.NavigationEventArgs e)
+        void HandlePushed(object sender, NetNavigationEventArgs e)
         {
             Navigated?.Invoke(navigationPage, new NavigationEventArgs(NavigationEventArgs.NavigationType.Pushed, e.Page));
         }

@@ -1,7 +1,12 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+#if NETSTANDARD
 using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+#endif
 
 namespace Float.Core.Compatibility
 {
@@ -19,7 +24,11 @@ namespace Float.Core.Compatibility
         {
             try
             {
+#if NETSTANDARD
                 var method = typeof(Device).GetMethod("BeginInvokeOnMainThread", BindingFlags.Static | BindingFlags.Public);
+#else
+                var method = typeof(Microsoft.Maui.ApplicationModel.MainThread).GetMethod("BeginInvokeOnMainThread", BindingFlags.Static | BindingFlags.Public);
+#endif
                 method?.Invoke(null, new[] { action });
             }
             catch (Exception e) when (e is TargetInvocationException || e is InvalidOperationException)
@@ -32,7 +41,11 @@ namespace Float.Core.Compatibility
         {
             try
             {
+#if NETSTANDARD
                 var method = typeof(Device).GetMethod("InvokeOnMainThreadAsync", new[] { typeof(Action) });
+#else
+                var method = typeof(Microsoft.Maui.ApplicationModel.MainThread).GetMethod("InvokeOnMainThreadAsync", new[] { typeof(Action) });
+#endif
                 await method?.InvokeAsync(null, new[] { action });
             }
             catch (Exception e) when (e is TargetInvocationException || e is InvalidOperationException)

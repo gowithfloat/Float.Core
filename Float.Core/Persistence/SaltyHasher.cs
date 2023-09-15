@@ -30,7 +30,7 @@ namespace Float.Core.Persistence
                 throw new InvalidStringArgumentException(nameof(secret));
             }
 
-            using var sha = new SHA256Managed();
+            using var sha = SHA256.Create();
 
             return sha.ComputeHash((secret + salt).ToBase64Bytes())
                 .Aggregate(new StringBuilder(), (sb, bytes) => sb.Append(bytes.ToString(CultureInfo.InvariantCulture)))

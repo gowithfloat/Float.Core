@@ -92,7 +92,6 @@ Task("GitVersion")
     });
 
 Task("Build")
-    .IsDependentOn("RestorePackages")
     .IsDependentOn("GitVersion")
     .Does(() =>
     {
@@ -113,7 +112,7 @@ Task("Test")
     {
         var testSettings = new DotNetCoreTestSettings 
         {
-            Loggers = new[] { "nunit" },
+            Loggers = new[] { "trx" },
         };
 
         var coverletSettings = new CoverletSettings 

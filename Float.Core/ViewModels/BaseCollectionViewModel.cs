@@ -57,9 +57,9 @@ namespace Float.Core.ViewModels
             {
                 ModelCollectionChangeProxy.Subscribe(bindableCollection, this);
             }
-
+#pragma warning disable CA2214 // Do not call overrideable methods in constructor
             AddViewModels(modelCollection);
-
+#pragma warning restore CA2214 // Do not call overrideable methods in constructor
             if (filter != null)
             {
                 Filter = filter;

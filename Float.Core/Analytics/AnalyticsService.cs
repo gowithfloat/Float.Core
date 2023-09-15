@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NETSTANDARD
 using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
+#endif
 
 namespace Float.Core.Analytics
 {
@@ -26,7 +32,11 @@ namespace Float.Core.Analytics
         /// </summary>
         public static void EnableTracking()
         {
+#if NETSTANDARD
             Application.Current.Properties[SendUsageDataKey] = true;
+#else
+            Preferences.Default.Set(SendUsageDataKey, true);
+#endif
         }
 
         /// <summary>
@@ -35,7 +45,11 @@ namespace Float.Core.Analytics
         /// </summary>
         public static void DisableTracking()
         {
+#if NETSTANDARD
             Application.Current.Properties[SendUsageDataKey] = false;
+#else
+            Preferences.Default.Set(SendUsageDataKey, false);
+#endif
         }
 
         /// <summary>
@@ -46,10 +60,17 @@ namespace Float.Core.Analytics
         {
             try
             {
+#if NETSTANDARD
                 if (Application.Current?.Properties?.ContainsKey(SendUsageDataKey) == true)
                 {
                     return (bool?)Application.Current.Properties[SendUsageDataKey] != false;
                 }
+#else
+                if (Preferences.Default?.ContainsKey(SendUsageDataKey) == true)
+                {
+                    return (bool?)Preferences.Default.Get(SendUsageDataKey, true) != false;
+                }
+#endif
 
                 return true;
             }
