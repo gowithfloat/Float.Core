@@ -26,9 +26,9 @@ jobs:
       - name: Set Assembly Version
         run: ./build.sh --task=GitVersion --configuration=Release
       - name: Build Library
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build ./Float.Core/Float.Core.csproj --configuration Release --no-restore
       - name: Update Version
-        run: sed -i "s/<Version><\/Version>/<Version>${{ github.event.release.name }}<\/Version>/" ./Float.TinCan/Float.TinCan.csproj
+        run: sed -i "s/<Version><\/Version>/<Version>${{ github.event.release.name }}<\/Version>/" ./Float.Core/Float.Core.csproj
       - name: Pack and Upload
         run: dotnet pack --configuration Release --no-restore
       - name: Deploy to NuGet
