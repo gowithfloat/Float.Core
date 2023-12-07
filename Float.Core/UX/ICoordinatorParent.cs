@@ -1,3 +1,5 @@
+using System;
+
 namespace Float.Core.UX
 {
     /// <summary>
@@ -16,5 +18,11 @@ namespace Float.Core.UX
         /// </summary>
         /// <param name="coordinator">The coordinator to remove.</param>
         void RemoveChild(ICoordinator coordinator);
+
+        /// <summary>
+        /// Ensures all the children can properly finish before the parent finishes.
+        /// </summary>
+        /// <param name="args">The event args.</param>
+        void FinishFamily(EventArgs args);
     }
 }

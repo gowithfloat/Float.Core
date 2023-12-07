@@ -16,6 +16,11 @@ namespace Float.Core.UX
         readonly List<ICoordinator> childCoordinators = new ();
 
         /// <summary>
+        /// The event args that have been used as we are waiting to finish all the children before closing the parent.
+        /// </summary>
+        EventArgs waitingToFinishEventArgs = null;
+
+        /// <summary>
         /// Gets a value indicating whether this <see cref="CoordinatorParent"/> has children.
         /// </summary>
         /// <value><c>true</c> if has children; otherwise, <c>false</c>.</value>
@@ -98,6 +103,14 @@ namespace Float.Core.UX
             }
         }
 
+        /// <inheritdoc />
+        public virtual void FinishFamily(EventArgs args)
+        {
+            waitingToFinishEventArgs = args;
+            NavigationContext?.DismissPageAsync(false);
+            NavigationContext?.Reset(false);
+        }
+
         /// <summary>
         /// Use to determine if this coordinator already contains a certain type of child coordinator.
         /// </summary>
@@ -148,6 +161,12 @@ namespace Float.Core.UX
             if (sender is ICoordinator child)
             {
                 RemoveChild(child);
+            }
+
+            if (!HasChildren && waitingToFinishEventArgs != null)
+            {
+                Finish(waitingToFinishEventArgs);
+                waitingToFinishEventArgs = null;
             }
         }
     }
