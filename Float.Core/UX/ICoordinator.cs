@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Float.Core.UX
 {
@@ -23,5 +24,12 @@ namespace Float.Core.UX
         /// </summary>
         /// <param name="navigationContext">The navigation context for this coordinator.</param>
         void Start(INavigationContext navigationContext);
+
+        /// <summary>
+        /// Requests that a coordinator will finish.
+        /// </summary>
+        /// <param name="eventArgs">The event args.</param>
+        /// <returns>A task, with a boolean indicating whether this did finish.</returns>
+        Task<bool> RequestFinish(EventArgs eventArgs);
     }
 }
