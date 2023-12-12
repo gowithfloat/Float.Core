@@ -27,6 +27,11 @@ namespace Float.Core.UX
         Page managedPage;
 
         /// <summary>
+        /// The event args that are pending a finish.
+        /// </summary>
+        EventArgs waitingToFinishEventArgs;
+
+        /// <summary>
         /// Occurs when this coordinator is started.
         /// </summary>
         public event EventHandler Started;
@@ -91,6 +96,35 @@ namespace Float.Core.UX
             }
 
             isStarted = true;
+        }
+
+        /// <inheritdoc/>
+        public Task<bool> RequestFinish(EventArgs args)
+        {
+            return Task.FromResult(HandleFinishRequested(this, args));
+        }
+
+        /// <summary>
+        /// Handles when a finish is requested.
+        /// </summary>
+        /// <param name="coordinator">The coordinator that has requested this coordinator to finish.</param>
+        /// <param name="eventArgs">The event args.</param>
+        /// <returns>A value indicating whether this finished.</returns>
+        public virtual bool HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        {
+            if (this == coordinator)
+            {
+                if (managedPage == null)
+                {
+                    Finish(eventArgs);
+                    return true;
+                }
+
+                waitingToFinishEventArgs = eventArgs;
+                NavigationContext.Reset(false);
+            }
+
+            return false;
         }
 
         /// <summary>

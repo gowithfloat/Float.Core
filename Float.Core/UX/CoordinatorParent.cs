@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Float.Core.Extensions;
 
 namespace Float.Core.UX
@@ -103,14 +104,6 @@ namespace Float.Core.UX
             }
         }
 
-        /// <inheritdoc />
-        public virtual void FinishFamily(EventArgs args)
-        {
-            waitingToFinishEventArgs = args;
-            NavigationContext?.DismissPageAsync(false);
-            NavigationContext?.Reset(false);
-        }
-
         /// <summary>
         /// Use to determine if this coordinator already contains a certain type of child coordinator.
         /// </summary>
@@ -128,6 +121,33 @@ namespace Float.Core.UX
         public override string ToString()
         {
             return $"[{GetType()}, Children: {string.Join(",", childCoordinators)}]";
+        }
+
+        /// <summary>
+        /// Handles the finish request.
+        /// </summary>
+        /// <param name="coordinator">The calling coordinator.</param>
+        /// <param name="eventArgs">The event args.</param>
+        /// <returns>A value indicating whether this finished.</returns>
+        public override bool HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        {
+            var didFinish = true;
+
+            waitingToFinishEventArgs = eventArgs;
+
+            foreach (var eachChild in ChildCoordinators)
+            {
+                if (eachChild is Coordinator childCoordinator)
+                {
+                    var finished = childCoordinator.HandleFinishRequested(childCoordinator, eventArgs);
+                    if (!finished)
+                    {
+                        didFinish = false;
+                    }
+                }
+            }
+
+            return didFinish;
         }
 
         /// <inheritdoc />
