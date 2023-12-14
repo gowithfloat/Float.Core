@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Float.Core.Extensions;
+using static Float.Core.UX.ICoordinator;
 
 namespace Float.Core.UX
 {
@@ -129,25 +129,32 @@ namespace Float.Core.UX
         /// <param name="coordinator">The calling coordinator.</param>
         /// <param name="eventArgs">The event args.</param>
         /// <returns>A value indicating whether this finished.</returns>
-        public override bool HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        public override CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
         {
-            var didFinish = true;
-
             waitingToFinishEventArgs = eventArgs;
+
+            CoordinatorRequestFinishStatus? status = null;
 
             foreach (var eachChild in ChildCoordinators)
             {
                 if (eachChild is Coordinator childCoordinator)
                 {
-                    var finished = childCoordinator.HandleFinishRequested(childCoordinator, eventArgs);
-                    if (!finished)
+                    var freshStatus = childCoordinator.HandleFinishRequested(childCoordinator, eventArgs);
+
+                    if (status == null)
                     {
-                        didFinish = false;
+                        status = freshStatus;
+                    }
+
+                    // If every child finishes with the same status we can return that, otherwise unknown seems to be the best option.
+                    if (freshStatus != status)
+                    {
+                        status = CoordinatorRequestFinishStatus.Unknown;
                     }
                 }
             }
 
-            return didFinish;
+            return status ?? CoordinatorRequestFinishStatus.Unknown;
         }
 
         /// <inheritdoc />

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using static Float.Core.UX.ICoordinator;
 
 namespace Float.Core.UX
 {
@@ -99,9 +100,9 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc/>
-        public Task<bool> RequestFinish(EventArgs args)
+        public CoordinatorRequestFinishStatus RequestFinish(EventArgs args)
         {
-            return Task.FromResult(HandleFinishRequested(this, args));
+            return HandleFinishRequested(this, args);
         }
 
         /// <summary>
@@ -110,21 +111,22 @@ namespace Float.Core.UX
         /// <param name="coordinator">The coordinator that has requested this coordinator to finish.</param>
         /// <param name="eventArgs">The event args.</param>
         /// <returns>A value indicating whether this finished.</returns>
-        public virtual bool HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        public virtual CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
         {
             if (this == coordinator)
             {
                 if (managedPage == null)
                 {
                     Finish(eventArgs);
-                    return true;
+                    return CoordinatorRequestFinishStatus.FinishedImmediately;
                 }
 
                 waitingToFinishEventArgs = eventArgs;
                 NavigationContext.Reset(false);
+                return CoordinatorRequestFinishStatus.PendingFinish;
             }
 
-            return false;
+            return CoordinatorRequestFinishStatus.Unknown;
         }
 
         /// <summary>
