@@ -17,11 +17,6 @@ namespace Float.Core.UX
         readonly List<ICoordinator> childCoordinators = new ();
 
         /// <summary>
-        /// The event args that have been used as we are waiting to finish all the children before closing the parent.
-        /// </summary>
-        EventArgs waitingToFinishEventArgs = null;
-
-        /// <summary>
         /// Gets a value indicating whether this <see cref="CoordinatorParent"/> has children.
         /// </summary>
         /// <value><c>true</c> if has children; otherwise, <c>false</c>.</value>
@@ -123,15 +118,10 @@ namespace Float.Core.UX
             return $"[{GetType()}, Children: {string.Join(",", childCoordinators)}]";
         }
 
-        /// <summary>
-        /// Handles the finish request.
-        /// </summary>
-        /// <param name="coordinator">The calling coordinator.</param>
-        /// <param name="eventArgs">The event args.</param>
-        /// <returns>A value indicating whether this finished.</returns>
+        /// <inheritdoc />
         public override CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
         {
-            waitingToFinishEventArgs = eventArgs;
+            WaitingToFinishEventArgs = eventArgs;
 
             CoordinatorRequestFinishStatus? status = null;
 
@@ -139,7 +129,7 @@ namespace Float.Core.UX
             {
                 if (eachChild is Coordinator childCoordinator)
                 {
-                    var freshStatus = childCoordinator.HandleFinishRequested(childCoordinator, eventArgs);
+                    var freshStatus = childCoordinator.HandleFinishRequested(this, eventArgs);
 
                     if (status == null)
                     {
@@ -154,7 +144,7 @@ namespace Float.Core.UX
                 }
             }
 
-            return status ?? CoordinatorRequestFinishStatus.Unknown;
+            return status ?? base.HandleFinishRequested(coordinator, eventArgs);
         }
 
         /// <inheritdoc />
@@ -190,10 +180,10 @@ namespace Float.Core.UX
                 RemoveChild(child);
             }
 
-            if (!HasChildren && waitingToFinishEventArgs != null)
+            if (!HasChildren && WaitingToFinishEventArgs != null)
             {
-                Finish(waitingToFinishEventArgs);
-                waitingToFinishEventArgs = null;
+                Finish(WaitingToFinishEventArgs);
+                WaitingToFinishEventArgs = null;
             }
         }
     }

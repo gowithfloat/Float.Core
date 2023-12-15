@@ -28,11 +28,6 @@ namespace Float.Core.UX
         Page managedPage;
 
         /// <summary>
-        /// The event args that are pending a finish.
-        /// </summary>
-        EventArgs waitingToFinishEventArgs;
-
-        /// <summary>
         /// Occurs when this coordinator is started.
         /// </summary>
         public event EventHandler Started;
@@ -59,6 +54,14 @@ namespace Float.Core.UX
         /// </summary>
         /// <value><c>true</c> if is finished; otherwise, <c>false</c>.</value>
         protected bool IsFinished => isFinished;
+
+        /// <summary>
+        /// Gets or sets the event args that are pending a finish.
+        /// </summary>
+        /// <value>
+        /// The event args that are pending a finish.
+        /// </value>
+        protected EventArgs WaitingToFinishEventArgs { get; set; }
 
         /// <inheritdoc />
         public virtual void Start(INavigationContext context)
@@ -121,12 +124,12 @@ namespace Float.Core.UX
                     return CoordinatorRequestFinishStatus.FinishedImmediately;
                 }
 
-                waitingToFinishEventArgs = eventArgs;
+                WaitingToFinishEventArgs = eventArgs;
                 NavigationContext.Reset(false);
                 return CoordinatorRequestFinishStatus.PendingFinish;
             }
 
-            return CoordinatorRequestFinishStatus.Unknown;
+            return CoordinatorRequestFinishStatus.WillNotFinish;
         }
 
         /// <summary>
@@ -162,6 +165,7 @@ namespace Float.Core.UX
             }
 
             managedPage = null;
+            WaitingToFinishEventArgs = null;
 
             if (NavigationContext != null)
             {
@@ -239,17 +243,16 @@ namespace Float.Core.UX
             switch (args.Type)
             {
                 case NavigationEventArgs.NavigationType.Popped:
+                case NavigationEventArgs.NavigationType.Reset:
                     if (args.Page == managedPage && !IsFinished)
                     {
-                        Finish(EventArgs.Empty);
-                    }
+                        if (WaitingToFinishEventArgs == null)
+                        {
+                            Finish(EventArgs.Empty);
+                            return;
+                        }
 
-                    break;
-
-                case NavigationEventArgs.NavigationType.Reset:
-                    if (args.Page != managedPage && !IsFinished)
-                    {
-                        Finish(EventArgs.Empty);
+                        Finish(WaitingToFinishEventArgs);
                     }
 
                     break;
