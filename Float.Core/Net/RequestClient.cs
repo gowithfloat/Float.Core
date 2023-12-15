@@ -103,7 +103,7 @@ namespace Float.Core.Net
         /// <param name="body">The Body.</param>
         public Task<Response> Patch(string path, HttpContent body)
         {
-           return Send(new HttpMethod("PATCH"), path, null, null, body);
+            return Send(new HttpMethod("PATCH"), path, null, null, body);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Float.Core.Net
 
             if (query != null)
             {
-                var queryString = string.Join("&", query.Select(kvp => Uri.EscapeUriString(kvp.Key) + "=" + Uri.EscapeUriString(kvp.Value)));
+                var queryString = string.Join("&", query.Select(kvp => Uri.EscapeDataString(kvp.Key) + "=" + Uri.EscapeDataString(kvp.Value)));
                 if (url.Query.Contains("?"))
                 {
                     url = new Uri(baseUri, $"{path}&{queryString}");

@@ -1,7 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 using static Float.Core.UX.ICoordinator;
+#if NETSTANDARD
+using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+#endif
 
 namespace Float.Core.UX
 {

@@ -3,7 +3,12 @@ using Float.Core.Compatibility;
 using Float.Core.Extensions;
 using Float.Core.L10n;
 using Float.Core.Resources;
+#if NETSTANDARD
 using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+#endif
 
 namespace Float.Core.Notifications
 {

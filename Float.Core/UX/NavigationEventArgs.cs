@@ -1,4 +1,9 @@
-﻿using Xamarin.Forms;
+﻿#if NETSTANDARD
+using Xamarin.Forms;
+#else
+using Microsoft.Maui;
+using Microsoft.Maui.Controls;
+#endif
 
 namespace Float.Core.UX
 {
