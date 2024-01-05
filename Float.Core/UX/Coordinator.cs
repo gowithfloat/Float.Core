@@ -114,7 +114,7 @@ namespace Float.Core.UX
         /// <param name="coordinator">The coordinator that has requested this coordinator to finish.</param>
         /// <param name="eventArgs">The event args.</param>
         /// <returns>A value indicating whether this finished.</returns>
-        public virtual CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        protected virtual CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
         {
             if (this == coordinator)
             {
@@ -243,8 +243,20 @@ namespace Float.Core.UX
             switch (args.Type)
             {
                 case NavigationEventArgs.NavigationType.Popped:
-                case NavigationEventArgs.NavigationType.Reset:
                     if (args.Page == managedPage && !IsFinished)
+                    {
+                        if (WaitingToFinishEventArgs == null)
+                        {
+                            Finish(EventArgs.Empty);
+                            return;
+                        }
+
+                        Finish(WaitingToFinishEventArgs);
+                    }
+
+                    break;
+                case NavigationEventArgs.NavigationType.Reset:
+                    if (args.Page != managedPage && !IsFinished)
                     {
                         if (WaitingToFinishEventArgs == null)
                         {
