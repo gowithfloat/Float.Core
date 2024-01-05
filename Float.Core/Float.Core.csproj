@@ -11,7 +11,6 @@
     <Title>$(AssemblyName)</Title>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>9.0</LangVersion>
-    <ReleaseVersion>1.0.0</ReleaseVersion>
     <Version></Version>
     <UseMaui>true</UseMaui>
   </PropertyGroup>

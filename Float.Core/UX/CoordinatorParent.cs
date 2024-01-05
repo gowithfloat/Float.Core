@@ -119,32 +119,19 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc />
-        public override CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        protected override CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
         {
             WaitingToFinishEventArgs = eventArgs;
-
-            CoordinatorRequestFinishStatus? status = null;
 
             foreach (var eachChild in ChildCoordinators)
             {
                 if (eachChild is Coordinator childCoordinator)
                 {
-                    var freshStatus = childCoordinator.HandleFinishRequested(this, eventArgs);
-
-                    if (status == null)
-                    {
-                        status = freshStatus;
-                    }
-
-                    // If every child finishes with the same status we can return that, otherwise unknown seems to be the best option.
-                    if (freshStatus != status)
-                    {
-                        status = CoordinatorRequestFinishStatus.Unknown;
-                    }
+                    childCoordinator.HandleFinishRequested(this, eventArgs);
                 }
             }
 
-            return status ?? base.HandleFinishRequested(coordinator, eventArgs);
+            return base.HandleFinishRequested(coordinator, eventArgs);
         }
 
         /// <inheritdoc />
