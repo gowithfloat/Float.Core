@@ -127,7 +127,7 @@ namespace Float.Core.UX
             {
                 if (eachChild is Coordinator childCoordinator)
                 {
-                    childCoordinator.HandleFinishRequested(this, eventArgs);
+                    childCoordinator.RequestFinish(eventArgs);
                 }
             }
 
