@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using static Float.Core.UX.ICoordinator;
 #if NETSTANDARD
 using Xamarin.Forms;
 #else
@@ -108,7 +107,7 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc/>
-        public CoordinatorRequestFinishStatus RequestFinish(EventArgs args)
+        public ICoordinator.CoordinatorRequestFinishStatus RequestFinish(EventArgs args)
         {
             return HandleFinishRequested(this, args);
         }
@@ -119,22 +118,22 @@ namespace Float.Core.UX
         /// <param name="coordinator">The coordinator that has requested this coordinator to finish.</param>
         /// <param name="eventArgs">The event args.</param>
         /// <returns>A value indicating whether this finished.</returns>
-        protected virtual CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        protected virtual ICoordinator.CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
         {
             if (this == coordinator)
             {
                 if (managedPage == null)
                 {
                     Finish(eventArgs);
-                    return CoordinatorRequestFinishStatus.FinishedImmediately;
+                    return ICoordinator.CoordinatorRequestFinishStatus.FinishedImmediately;
                 }
 
                 WaitingToFinishEventArgs = eventArgs;
                 NavigationContext.Reset(false);
-                return CoordinatorRequestFinishStatus.PendingFinish;
+                return ICoordinator.CoordinatorRequestFinishStatus.PendingFinish;
             }
 
-            return CoordinatorRequestFinishStatus.WillNotFinish;
+            return ICoordinator.CoordinatorRequestFinishStatus.WillNotFinish;
         }
 
         /// <summary>

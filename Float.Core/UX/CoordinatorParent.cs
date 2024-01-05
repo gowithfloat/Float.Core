@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Float.Core.Extensions;
-using static Float.Core.UX.ICoordinator;
 
 namespace Float.Core.UX
 {
@@ -119,7 +118,7 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc />
-        protected override CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        protected override ICoordinator.CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
         {
             WaitingToFinishEventArgs = eventArgs;
 
