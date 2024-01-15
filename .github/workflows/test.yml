@@ -21,8 +21,10 @@ jobs:
         run: dotnet workload restore
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build
+      - name: Build MAUI
         run: dotnet build --configuration MAUI --no-restore -f net7.0
+      - name: Build Legacy
+        run: dotnet build --configuration MAUI --no-restore -f netstandard2
       - name: Test
         run: dotnet test --configuration  MAUI --no-restore -f net7.0 --no-build --verbosity normal --logger:"trx;"
       - name: Publish Test Results
