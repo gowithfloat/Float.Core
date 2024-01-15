@@ -22,9 +22,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration MAUI --no-restore -f net7.0
       - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal --logger:"trx;"
+        run: dotnet test --configuration  MAUI --no-restore -f net7.0 --no-build --verbosity normal --logger:"trx;"
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
