@@ -23,11 +23,13 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore
+      - name: Pack
+        run: dotnet pack --configuration Release --no-restore
       - name: Save Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: bin
-          path: ./Float.Core/bin/Release/Float.Core/
+          name: nupkg
+          path: ./Float.Core/obj/Release/
           retention-days: 5 
       - name: Test
         run: dotnet test --configuration  MAUI --no-restore -f net7.0 --no-build --verbosity normal --logger:"trx;"
