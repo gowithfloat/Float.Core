@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2;net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2;net7.0</TargetFrameworks>
     <AssemblyName>Float.Core</AssemblyName>
     <AssemblyAuthor>Float</AssemblyAuthor>
     <AssemblyDescription>Common utility code used by Float projects.</AssemblyDescription>
@@ -14,6 +14,7 @@
     <ReleaseVersion>1.0.0</ReleaseVersion>
     <Version></Version>
     <UseMaui>true</UseMaui>
+    <Configurations>Release;MAUI;Debug</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(SolutionDir)\stylecop.json" />
@@ -30,6 +31,23 @@
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>TRACE;RELEASE;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MAUI|AnyCPU' ">
+    <IntermediateOutputPath>obj\MAUI</IntermediateOutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\MAUI</OutputPath>
+    <DefineConstants>TRACE;DEBUG;MAUI;</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\MAUI\Float.Core.xml</DocumentationFile>
+    <NoWarn></NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>TRACE;DEBUG;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Float.TinCan" Version="1.0.3.30" />

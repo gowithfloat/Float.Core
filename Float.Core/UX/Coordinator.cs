@@ -59,6 +59,14 @@ namespace Float.Core.UX
         /// <value><c>true</c> if is finished; otherwise, <c>false</c>.</value>
         protected bool IsFinished => isFinished;
 
+        /// <summary>
+        /// Gets or sets the event args that are pending a finish.
+        /// </summary>
+        /// <value>
+        /// The event args that are pending a finish.
+        /// </value>
+        protected EventArgs WaitingToFinishEventArgs { get; set; }
+
         /// <inheritdoc />
         public virtual void Start(INavigationContext context)
         {
@@ -98,6 +106,36 @@ namespace Float.Core.UX
             isStarted = true;
         }
 
+        /// <inheritdoc/>
+        public ICoordinator.CoordinatorRequestFinishStatus RequestFinish(EventArgs args)
+        {
+            return HandleFinishRequested(this, args);
+        }
+
+        /// <summary>
+        /// Handles when a finish is requested.
+        /// </summary>
+        /// <param name="coordinator">The coordinator that has requested this coordinator to finish.</param>
+        /// <param name="eventArgs">The event args.</param>
+        /// <returns>A value indicating whether this finished.</returns>
+        protected virtual ICoordinator.CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        {
+            if (this == coordinator)
+            {
+                if (managedPage == null)
+                {
+                    Finish(eventArgs);
+                    return ICoordinator.CoordinatorRequestFinishStatus.FinishedImmediately;
+                }
+
+                WaitingToFinishEventArgs = eventArgs;
+                NavigationContext.Reset(false);
+                return ICoordinator.CoordinatorRequestFinishStatus.PendingFinish;
+            }
+
+            return ICoordinator.CoordinatorRequestFinishStatus.WillNotFinish;
+        }
+
         /// <summary>
         /// Returning a page here will allow the coordinator to automatically
         /// manage itself based on the state of the UI.
@@ -131,6 +169,7 @@ namespace Float.Core.UX
             }
 
             managedPage = null;
+            WaitingToFinishEventArgs = null;
 
             if (NavigationContext != null)
             {
@@ -210,15 +249,26 @@ namespace Float.Core.UX
                 case NavigationEventArgs.NavigationType.Popped:
                     if (args.Page == managedPage && !IsFinished)
                     {
-                        Finish(EventArgs.Empty);
+                        if (WaitingToFinishEventArgs == null)
+                        {
+                            Finish(EventArgs.Empty);
+                            return;
+                        }
+
+                        Finish(WaitingToFinishEventArgs);
                     }
 
                     break;
-
                 case NavigationEventArgs.NavigationType.Reset:
                     if (args.Page != managedPage && !IsFinished)
                     {
-                        Finish(EventArgs.Empty);
+                        if (WaitingToFinishEventArgs == null)
+                        {
+                            Finish(EventArgs.Empty);
+                            return;
+                        }
+
+                        Finish(WaitingToFinishEventArgs);
                     }
 
                     break;

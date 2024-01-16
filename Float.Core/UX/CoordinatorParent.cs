@@ -118,6 +118,22 @@ namespace Float.Core.UX
         }
 
         /// <inheritdoc />
+        protected override ICoordinator.CoordinatorRequestFinishStatus HandleFinishRequested(ICoordinator coordinator, EventArgs eventArgs)
+        {
+            WaitingToFinishEventArgs = eventArgs;
+
+            foreach (var eachChild in ChildCoordinators)
+            {
+                if (eachChild is Coordinator childCoordinator)
+                {
+                    childCoordinator.RequestFinish(eventArgs);
+                }
+            }
+
+            return base.HandleFinishRequested(coordinator, eventArgs);
+        }
+
+        /// <inheritdoc />
         protected override void Finish(EventArgs args)
         {
             if (HasChildren)
@@ -148,6 +164,12 @@ namespace Float.Core.UX
             if (sender is ICoordinator child)
             {
                 RemoveChild(child);
+            }
+
+            if (!HasChildren && WaitingToFinishEventArgs != null)
+            {
+                Finish(WaitingToFinishEventArgs);
+                WaitingToFinishEventArgs = null;
             }
         }
     }
