@@ -90,7 +90,7 @@ namespace Float.Core.Tests
                 new KeyValuePair<string, int>("third", 333)
             };
 
-            var dict2 = dict1.ToDictionary();
+            var dict2 = IEnumerableExtensions.ToDictionary(dict1);
 
             Assert.Equal(111, dict2["first"]);
             Assert.Equal(222, dict2["second"]);
@@ -121,7 +121,7 @@ namespace Float.Core.Tests
         {
         }
 
-        class TestClass2: TestClass1
+        class TestClass2 : TestClass1
         {
         }
 
