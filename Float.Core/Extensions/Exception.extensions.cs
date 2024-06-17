@@ -56,7 +56,18 @@ namespace Float.Core.Extensions
 
                         if (code != null)
                         {
-                            switch (Convert.ToInt64(code, new NumberFormatInfo()))
+                            long convertedCode;
+
+                            try
+                            {
+                                convertedCode = Convert.ToInt64(code, new NumberFormatInfo());
+                            }
+                            catch (InvalidCastException) when (code is nint parsedCode)
+                            {
+                                convertedCode = long.Parse(parsedCode.ToString());
+                            }
+
+                            switch (convertedCode)
                             {
                                 // CannotFindHost
                                 // CannotConnectToHost
