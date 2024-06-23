@@ -1,5 +1,7 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.Messaging;
 using Float.Core.Extensions;
+using Float.Core.Messages;
 #if NETSTANDARD
 using Xamarin.Forms;
 #else
@@ -62,7 +64,7 @@ namespace Float.Core.UI
         /// <param name="name">The page name.</param>
         protected void TrackPageView(string name)
         {
-            MessagingCenter.Send(this, Analytics.AnalyticsMessageType.PageView, name);
+            WeakReferenceMessenger.Default.Send(new PageViewMessage(name, this));
         }
 
         /// <inheritdoc />
