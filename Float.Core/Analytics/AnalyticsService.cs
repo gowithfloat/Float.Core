@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.Messaging;
+using Float.Core.Messages;
 #if NETSTANDARD
 using Xamarin.Forms;
 #else
@@ -23,7 +25,7 @@ namespace Float.Core.Analytics
         /// </summary>
         protected AnalyticsService()
         {
-            MessagingCenter.Subscribe<UI.BaseContentPage, string>(this, AnalyticsMessageType.PageView, HandlePageView);
+            WeakReferenceMessenger.Default.Register<PageViewMessage>(this, HandlePageView);
         }
 
         /// <summary>
@@ -161,11 +163,11 @@ namespace Float.Core.Analytics
         /// <summary>
         /// Handler for when a page view occurs.
         /// </summary>
-        /// <param name="page">The page that appeared.</param>
-        /// <param name="name">The page name.</param>
-        void HandlePageView(UI.BaseContentPage page, string name)
+        /// <param name="sender">The page that appeared.</param>
+        /// <param name="message">The page name.</param>
+        void HandlePageView(object sender, PageViewMessage message)
         {
-            TrackPageView(name, page);
+            TrackPageView(message.Value, message.Page);
         }
     }
 }
