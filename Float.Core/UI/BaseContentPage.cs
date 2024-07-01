@@ -22,6 +22,21 @@ namespace Float.Core.UI
         public static readonly BindableProperty ErrorProperty = BindableProperty.Create(nameof(Error), typeof(Exception), typeof(ContentPage), null);
 
         /// <summary>
+        /// Binding for the IsLoading property.
+        /// </summary>
+        public static readonly BindableProperty IsLoadingProperty = BindableProperty.Create(nameof(IsLoading), typeof(bool), typeof(BaseContentPage));
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the page should show a loading indicator.
+        /// </summary>
+        /// <value>Whether the page should show the loading indicator.</value>
+        public bool IsLoading
+        {
+            get => (bool)GetValue(IsLoadingProperty);
+            set => SetValue(IsLoadingProperty, value);
+        }
+
+        /// <summary>
         /// Gets or sets the current error on the page.
         /// </summary>
         /// <value>The exception that has occurred which the user should be aware of.</value>
@@ -52,7 +67,7 @@ namespace Float.Core.UI
             if (BindingContext is ViewModels.IPageViewModel viewModel)
             {
                 this.SetBinding(TitleProperty, nameof(viewModel.Title));
-                this.SetBinding(IsBusyProperty, nameof(viewModel.IsLoading));
+                this.SetBinding(IsLoadingProperty, nameof(viewModel.IsLoading));
                 this.SetBinding(ErrorProperty, nameof(viewModel.Error), BindingMode.TwoWay);
             }
         }
@@ -73,8 +88,8 @@ namespace Float.Core.UI
             base.OnPropertyChanged(propertyName);
             switch (propertyName)
             {
-                case nameof(IsBusy):
-                    if (IsBusy)
+                case nameof(IsLoading):
+                    if (IsLoading)
                     {
                         OnStartLoading();
                     }

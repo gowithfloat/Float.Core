@@ -52,7 +52,7 @@ namespace Float.Core.Commands
         /// <inheritdoc />
         public bool CanExecute(object parameter)
         {
-            return parameter is ViewModel<T> && command.CanExecute(parameter);
+            return parameter is ViewModel<T> vm && command.CanExecute(vm.UnderlyingModel);
         }
 
         /// <summary>
