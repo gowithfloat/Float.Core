@@ -164,7 +164,25 @@ namespace Float.Core.Net
                 request = await authStrategy.AuthenticateRequest(request).ConfigureAwait(false);
             }
 
-            var response = await Send(request).ConfigureAwait(false);
+            Response response;
+
+            try
+            {
+                response = await Send(request).ConfigureAwait(false);
+            }
+            catch (ForbiddenRedirectException ex)
+            {
+                // recreate a new request with the redirected url.
+                request = PrepareRequestMessage(method, ex.RedirectUri, headers, body);
+
+                if (authStrategy != null)
+                {
+                    // Send the first authenticated request
+                    request = await authStrategy.AuthenticateRequest(request).ConfigureAwait(false);
+                }
+
+                response = await Send(request).ConfigureAwait(false);
+            }
 
             // If we get unauthorized response, try to authenticate a second time.
             // This is common in OAuth when an access token is expired.
@@ -280,8 +298,16 @@ namespace Float.Core.Net
 
             try
             {
+                var originalUri = request.RequestUri?.AbsolutePath;
+
                 var httpResponse = await webClient.SendAsync(request).ConfigureAwait(false);
                 var responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                // Verify if a forbidden redirect happened.
+                if (httpResponse.StatusCode == HttpStatusCode.Forbidden && originalUri != request.RequestUri?.AbsolutePath)
+                {
+                    throw new ForbiddenRedirectException(request.RequestUri);
+                }
 
                 return new Response(httpResponse, responseContent);
             }
@@ -294,6 +320,19 @@ namespace Float.Core.Net
 
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Forbidden redirect exception helper to handle a content redirect.
+        /// </summary>
+        internal class ForbiddenRedirectException : Exception
+        {
+            public ForbiddenRedirectException(Uri redirectUri)
+            {
+                RedirectUri = redirectUri;
+            }
+
+            public Uri RedirectUri { get; }
         }
     }
 }
