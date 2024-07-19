@@ -169,9 +169,24 @@ namespace Float.Core.Net
             try
             {
                 response = await Send(request).ConfigureAwait(false);
+
+                // If we get unauthorized response, try to authenticate a second time.
+                // This is common in OAuth when an access token is expired.
+                if ((response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden) && authStrategy is IRefreshableAuthStrategy refreshableAuthStrategy)
+                {
+                    // we need to build a new request here; requests can only be sent once
+                    request.Dispose();
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                    request = PrepareRequestMessage(method, url, headers, body);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+                    request = await refreshableAuthStrategy.RefreshCredentialsAndAuthenticateRequest(request).ConfigureAwait(false);
+                    response = await Send(request).ConfigureAwait(false);
+                }
             }
-            catch (ForbiddenRedirectException ex)
+            catch (UnsuccessRedirectException ex)
             {
+                request.Dispose();
+
                 // recreate a new request with the redirected url.
                 request = PrepareRequestMessage(method, ex.RedirectUri, headers, body);
 
@@ -181,19 +196,6 @@ namespace Float.Core.Net
                     request = await authStrategy.AuthenticateRequest(request).ConfigureAwait(false);
                 }
 
-                response = await Send(request).ConfigureAwait(false);
-            }
-
-            // If we get unauthorized response, try to authenticate a second time.
-            // This is common in OAuth when an access token is expired.
-            if ((response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden) && authStrategy is IRefreshableAuthStrategy refreshableAuthStrategy)
-            {
-                // we need to build a new request here; requests can only be sent once
-                request.Dispose();
-#pragma warning disable CA2000 // Dispose objects before losing scope
-                request = PrepareRequestMessage(method, url, headers, body);
-#pragma warning restore CA2000 // Dispose objects before losing scope
-                request = await refreshableAuthStrategy.RefreshCredentialsAndAuthenticateRequest(request).ConfigureAwait(false);
                 response = await Send(request).ConfigureAwait(false);
             }
 
@@ -298,15 +300,17 @@ namespace Float.Core.Net
 
             try
             {
-                var originalUri = request.RequestUri?.AbsolutePath;
+                var originalUri = request.RequestUri;
 
                 var httpResponse = await webClient.SendAsync(request).ConfigureAwait(false);
                 var responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                // Verify if a forbidden redirect happened.
-                if (httpResponse.StatusCode == HttpStatusCode.Forbidden && originalUri != request.RequestUri?.AbsolutePath)
+                // Verify if a unsuccess redirect happened.
+                if (!httpResponse.IsSuccessStatusCode
+                    && originalUri.Host == request.RequestUri.Host
+                    && originalUri.AbsolutePath != request.RequestUri?.AbsolutePath)
                 {
-                    throw new ForbiddenRedirectException(request.RequestUri);
+                    throw new UnsuccessRedirectException(request.RequestUri);
                 }
 
                 return new Response(httpResponse, responseContent);
@@ -323,11 +327,11 @@ namespace Float.Core.Net
         }
 
         /// <summary>
-        /// Forbidden redirect exception helper to handle a content redirect.
+        /// Unsuccess redirect exception helper to handle a content redirect.
         /// </summary>
-        internal class ForbiddenRedirectException : Exception
+        internal class UnsuccessRedirectException : Exception
         {
-            public ForbiddenRedirectException(Uri redirectUri)
+            public UnsuccessRedirectException(Uri redirectUri)
             {
                 RedirectUri = redirectUri;
             }
