@@ -183,7 +183,7 @@ namespace Float.Core.Net
                     response = await Send(request).ConfigureAwait(false);
                 }
             }
-            catch (UnsuccessRedirectException ex)
+            catch (RequestRedirectedException ex)
             {
                 request.Dispose();
 
@@ -314,7 +314,7 @@ namespace Float.Core.Net
                     if (redirectUrl.Host == request.RequestUri.Host
                         && redirectUrl.AbsolutePath != request.RequestUri?.AbsolutePath)
                     {
-                        throw new UnsuccessRedirectException(redirectUrl);
+                        throw new RequestRedirectedException(redirectUrl);
                     }
                 }
 
@@ -332,11 +332,11 @@ namespace Float.Core.Net
         }
 
         /// <summary>
-        /// Unsuccess redirect exception helper to handle a content redirect.
+        /// Request redirected exception helper to handle a content redirect.
         /// </summary>
-        internal class UnsuccessRedirectException : Exception
+        internal class RequestRedirectedException : Exception
         {
-            public UnsuccessRedirectException(Uri redirectUri)
+            public RequestRedirectedException(Uri redirectUri)
             {
                 RedirectUri = redirectUri;
             }
