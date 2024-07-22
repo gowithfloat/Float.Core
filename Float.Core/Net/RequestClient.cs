@@ -305,12 +305,17 @@ namespace Float.Core.Net
                 var httpResponse = await webClient.SendAsync(request).ConfigureAwait(false);
                 var responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                // Verify if a unsuccess redirect happened.
-                if (!httpResponse.IsSuccessStatusCode
-                    && originalUri.Host == request.RequestUri.Host
-                    && originalUri.AbsolutePath != request.RequestUri?.AbsolutePath)
+                // Verify if a redirect happened.
+                if (httpResponse.StatusCode == HttpStatusCode.Moved
+                    || httpResponse.StatusCode == HttpStatusCode.MovedPermanently)
                 {
-                    throw new UnsuccessRedirectException(request.RequestUri);
+                    var redirectUrl = httpResponse.Headers.Location;
+
+                    if (redirectUrl.Host == request.RequestUri.Host
+                        && redirectUrl.AbsolutePath != request.RequestUri?.AbsolutePath)
+                    {
+                        throw new UnsuccessRedirectException(redirectUrl);
+                    }
                 }
 
                 return new Response(httpResponse, responseContent);
