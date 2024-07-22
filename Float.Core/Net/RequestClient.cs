@@ -164,18 +164,38 @@ namespace Float.Core.Net
                 request = await authStrategy.AuthenticateRequest(request).ConfigureAwait(false);
             }
 
-            var response = await Send(request).ConfigureAwait(false);
+            Response response;
 
-            // If we get unauthorized response, try to authenticate a second time.
-            // This is common in OAuth when an access token is expired.
-            if ((response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden) && authStrategy is IRefreshableAuthStrategy refreshableAuthStrategy)
+            try
             {
-                // we need to build a new request here; requests can only be sent once
-                request.Dispose();
+                response = await Send(request).ConfigureAwait(false);
+
+                // If we get unauthorized response, try to authenticate a second time.
+                // This is common in OAuth when an access token is expired.
+                if ((response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden) && authStrategy is IRefreshableAuthStrategy refreshableAuthStrategy)
+                {
+                    // we need to build a new request here; requests can only be sent once
+                    request.Dispose();
 #pragma warning disable CA2000 // Dispose objects before losing scope
-                request = PrepareRequestMessage(method, url, headers, body);
+                    request = PrepareRequestMessage(method, url, headers, body);
 #pragma warning restore CA2000 // Dispose objects before losing scope
-                request = await refreshableAuthStrategy.RefreshCredentialsAndAuthenticateRequest(request).ConfigureAwait(false);
+                    request = await refreshableAuthStrategy.RefreshCredentialsAndAuthenticateRequest(request).ConfigureAwait(false);
+                    response = await Send(request).ConfigureAwait(false);
+                }
+            }
+            catch (RequestRedirectedException ex)
+            {
+                request.Dispose();
+
+                // recreate a new request with the redirected url.
+                request = PrepareRequestMessage(method, ex.RedirectUri, headers, body);
+
+                if (authStrategy != null)
+                {
+                    // Send the first authenticated request
+                    request = await authStrategy.AuthenticateRequest(request).ConfigureAwait(false);
+                }
+
                 response = await Send(request).ConfigureAwait(false);
             }
 
@@ -280,8 +300,23 @@ namespace Float.Core.Net
 
             try
             {
+                var originalUri = request.RequestUri;
+
                 var httpResponse = await webClient.SendAsync(request).ConfigureAwait(false);
                 var responseContent = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                // Verify if a redirect happened.
+                if (httpResponse.StatusCode == HttpStatusCode.Moved
+                    || httpResponse.StatusCode == HttpStatusCode.MovedPermanently)
+                {
+                    var redirectUrl = httpResponse.Headers.Location;
+
+                    if (redirectUrl.Host == request.RequestUri.Host
+                        && redirectUrl.AbsolutePath != request.RequestUri?.AbsolutePath)
+                    {
+                        throw new RequestRedirectedException(redirectUrl);
+                    }
+                }
 
                 return new Response(httpResponse, responseContent);
             }
@@ -294,6 +329,19 @@ namespace Float.Core.Net
 
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Request redirected exception helper to handle a content redirect.
+        /// </summary>
+        internal class RequestRedirectedException : Exception
+        {
+            public RequestRedirectedException(Uri redirectUri)
+            {
+                RedirectUri = redirectUri;
+            }
+
+            public Uri RedirectUri { get; }
         }
     }
 }
