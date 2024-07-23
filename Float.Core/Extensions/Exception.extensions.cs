@@ -37,6 +37,13 @@ namespace Float.Core.Extensions
                 return true;
             }
 
+            // On Android, the message might literally be "Connection failure"
+            // (see https://github.com/dotnet/android/blob/688245d397097fbc8e70fd291abe11143f1c3553/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L577)
+            if (e.Message == "Connection failure")
+            {
+                return true;
+            }
+
             // we sometimes get a webexception status of NameResolutionFailure that we don't have access to, but its enum value is one
             if (e.InnerException is WebException webException && ((int)webException.Status == 1 || webException.Status == WebExceptionStatus.ConnectFailure))
             {
