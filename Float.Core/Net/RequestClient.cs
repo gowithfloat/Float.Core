@@ -307,7 +307,7 @@ namespace Float.Core.Net
 
                 // Verify if a redirect happened.
                 if (httpResponse.StatusCode == HttpStatusCode.Moved
-                    || httpResponse.StatusCode == HttpStatusCode.MovedPermanently)
+                    || httpResponse.StatusCode == HttpStatusCode.Found)
                 {
                     var redirectUrl = httpResponse.Headers.Location;
 
