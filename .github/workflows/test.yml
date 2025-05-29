@@ -17,7 +17,7 @@ jobs:
             6.0.x
             7.0.x
             8.0.x
-      - name: Retore Workload
+      - name: Restore Workload
         run: dotnet workload restore
       - name: Restore dependencies
         run: dotnet restore
