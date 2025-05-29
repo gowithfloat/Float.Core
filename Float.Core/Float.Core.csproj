@@ -43,6 +43,9 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">  
     <PackageReference Include="Xamarin.Forms" Version="[5.0.0.1874,6)" />
   </ItemGroup>
+  <ItemGroup Condition="$(!TargetFramework.StartsWith('netstandard'))">  
+    <PackageReference Include="Microsoft.Maui.Controls" Version="[8.0.100,9)" />
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="Resources\" />
