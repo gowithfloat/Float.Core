@@ -23,12 +23,14 @@ jobs:
         run: dotnet workload restore
       - name: Restore dependencies
         run: dotnet restore
-      - name: Set Assembly Version
-        run: ./build.sh --task=GitVersion --configuration=Release
+      - name: .NET project version updater
+        uses: vers-one/dotnet-project-version-updater@v1.7
+        with:
+          files: |
+            "Float.Core/Float.Core.csproj", "**/*.nuspec", "**/AssemblyInfo.cs"
+          version: ${{ github.event.release.name }}
       - name: Build Library
         run: dotnet build ./Float.Core/Float.Core.csproj --configuration Release --no-restore
-      - name: Update Version
-        run: sed -i "s/<Version><\/Version>/<Version>${{ github.event.release.name }}<\/Version>/" ./Float.Core/Float.Core.csproj
       - name: Pack and Upload
         run: dotnet pack --configuration Release --no-restore
       - name: Deploy to NuGet
