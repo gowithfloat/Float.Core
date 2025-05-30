@@ -13,6 +13,8 @@ namespace Float.Core.Tests
 {
     public class DebounceCommandTests
     {
+        Timer timer;
+
         [Fact]
         public async Task TestDoesDebounceTimer()
         {
@@ -23,7 +25,7 @@ namespace Float.Core.Tests
             var debouncedIncrementCommand = new DebounceCommand(incrementCommand, 450);
 
             // attempt to increment every 100ms
-            new Timer(arg => debouncedIncrementCommand.Execute(arg), null, 100, 100);
+            timer = new Timer(arg => debouncedIncrementCommand.Execute(arg), null, 100, 100);
 
             // wait one second
             await Task.Delay(1000);

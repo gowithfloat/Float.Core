@@ -7,7 +7,6 @@ using Float.Core.Resources;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 #else
-using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 #endif
@@ -18,6 +17,7 @@ namespace Float.Core.L10n
     /// The markup extension allowing XAML to contain localization.
     /// </summary>
     [ContentProperty("Text")]
+    [AcceptEmptyServiceProvider]
     public class TranslateExtension : IMarkupExtension
     {
         static readonly List<ResourceManager> RegisteredResourceManagers = new ()
