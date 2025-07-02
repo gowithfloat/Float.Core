@@ -70,7 +70,11 @@ namespace Float.Core.Notifications
         {
             DeviceProxy.BeginInvokeOnMainThread(() =>
             {
+                #if NET8_0_OR_GREATER
+                var page = context ?? Application.Current.Windows[0].Page;
+                #else
                 var page = context ?? Application.Current.MainPage;
+                #endif
                 page.DisplayAlert(title, message, Localize.String("OK"));
             });
         }

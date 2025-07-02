@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net7.0;net8.0;</TargetFrameworks>
+    <TargetFrameworks>netstandard2;net7.0;net8.0;net9.0;</TargetFrameworks>
     <AssemblyName>Float.Core</AssemblyName>
     <AssemblyAuthor>Float</AssemblyAuthor>
     <AssemblyDescription>Common utility code used by Float projects.</AssemblyDescription>
@@ -37,11 +37,20 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="[12.0.1,]" />
+    <PackageReference Include="Newtonsoft.Json" Version="[13.0.1,]" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="[8.2.2,9)" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">  
-    <PackageReference Include="Xamarin.Forms" Version="[5.0.0.1874,6)" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net7'))">
+    <PackageReference Include="Microsoft.Maui.Controls" Version="[8.0.20,9)" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net8'))">
+    <PackageReference Include="Microsoft.Maui.Controls" Version="[8.0.100,9)" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
+    <PackageReference Include="Microsoft.Maui.Controls" Version="[9.0.0,10)" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
+    <PackageReference Include="Xamarin.Forms" Version="[5.0.0.1874,6)" />  
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
