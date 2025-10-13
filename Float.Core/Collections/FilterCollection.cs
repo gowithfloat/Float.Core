@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Float.Core.Collections
@@ -28,6 +30,11 @@ namespace Float.Core.Collections
             options = new ObservableElementCollection<IFilter<T>>(filterOptions);
             options.ChildPropertyChanged += HandleOptionChanged;
             options.CollectionChanged += HandleOptionChanged;
+
+            foreach (var filter in filterOptions)
+            {
+                filter.FilterChanged += HandleFilterChanged;
+            }
         }
 
         /// <summary>
@@ -110,13 +117,63 @@ namespace Float.Core.Collections
         }
 
         /// <summary>
+        /// Invoked when filter options are added or removed.
+        /// </summary>
+        /// <param name="sender">The options collection.</param>
+        /// <param name="args">The change event to the collection.</param>
+        protected virtual void HandleOptionsChanged(object sender, NotifyCollectionChangedEventArgs args)
+        {
+            if (sender is not IEnumerable)
+            {
+                return;
+            }
+
+            if (args.OldItems is IEnumerable<IFilter<T>> oldFilters)
+            {
+                foreach (var filter in oldFilters)
+                {
+                    filter.FilterChanged -= HandleFilterChanged;
+                }
+            }
+
+            var newItems = args.NewItems ?? sender;
+            if (newItems is IEnumerable<IFilter<T>> newFilters)
+            {
+                foreach (var filter in newFilters)
+                {
+                    filter.FilterChanged -= HandleFilterChanged;
+                    filter.FilterChanged += HandleFilterChanged;
+                }
+            }
+        }
+
+        /// <summary>
         /// Invoked when the filter options have changed.
         /// </summary>
         /// <param name="sender">The initiator of the change.</param>
         /// <param name="args">Contains the proeprty that was changed.</param>
         protected virtual void HandleOptionChanged(object sender, EventArgs args)
         {
+            if (args is PropertyChangedEventArgs eventArgs && eventArgs.PropertyName == nameof(IFilter<T>.IsEnabled))
+            {
+                // If the only think that changed was an `IsEnabled` property
+                // then there's nothing to do since `HandleFilterChanged`
+                // will take care of bubbling up the notification of the filter change.
+                return;
+            }
+
             NotifyPropertyChanged(nameof(Options));
+            NotifyFilterChanged();
+        }
+
+        /// <summary>
+        /// Invoked when one of the filters in the collection changes.
+        /// </summary>
+        /// <param name="sender">The filter that changed.</param>
+        /// <param name="args">The event.</param>
+        protected virtual void HandleFilterChanged(object sender, EventArgs args)
+        {
+            // When a filter in the collection changes, then the collection changes.
             NotifyFilterChanged();
         }
     }
