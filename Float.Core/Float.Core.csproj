@@ -47,7 +47,7 @@
     <PackageReference Include="Microsoft.Maui.Controls" Version="[8.0.100,9)" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9'))">
-    <PackageReference Include="Microsoft.Maui.Controls" Version="[9.0.0,10)" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.51" />
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard'))">
     <PackageReference Include="Xamarin.Forms" Version="[5.0.0.1874,6)" />  
